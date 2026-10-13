@@ -1,39 +1,52 @@
 <!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>方包包 V9.1 淘汰賽</title>
+<title>方包包 V9.2 極簡版</title>
 <style>
 *{box-sizing:border-box;font-family:'Noto Sans HK',sans-serif}
-body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:20px}
+body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:20px;transition:.3s}
 .topBar{width:92%;max-width:420px;display:flex;justify-content:space-between;margin:8px 0 0}.ver{font-size:11px;color:#000;background:#FFEB00;padding:4px 12px;border-radius:99px;font-weight:900}
 .h1{font-size:20px;font-weight:900;margin:6px 0}.h1 b{background:linear-gradient(90deg,#FFEB00,#00FF88);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0}.tab,.lvl{flex:1;padding:10px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:12px}.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
-.pillRow{display:flex;gap:6px;justify-content:center;margin:4px 0;flex-wrap:wrap}.pill{background:#1a1a1a;border:1px solid #333;padding:5px 12px;border-radius:99px;font-size:12px}.pill b{color:#FFEB00}
-.flash{color:#FFEB00;font-weight:900;text-align:center;margin:6px 0;min-height:22px;font-size:17px}.timeT{color:#aaa;font-size:12px;text-align:center;min-height:16px}
-.cd{font-size:70px;font-weight:900;display:none;height:70px;line-height:70px;text-align:center;width:92%;max-width:420px;color:#fff;text-shadow:0 0 20px #FFEB00}.cd.show{display:block;animation:pop.3s ease}@keyframes pop{0%{transform:scale(.5)}100%{transform:scale(1)}}
-.board{display:grid;gap:10px;width:92%;max-width:420px;margin-top:8px}.c3{grid-template-columns:1fr}.c4{grid-template-columns:1fr 1fr}.c5{grid-template-columns:1fr 1fr}
-.light{height:76px;border-radius:18px;border:0;font-size:18px;font-weight:900;color:#fff;opacity:.35;pointer-events:none}.light.active{opacity:1;pointer-events:auto}.light.on{filter:brightness(1.8);box-shadow:0 0 25px currentColor;transform:scale(1.03)}
-.controls{display:flex;gap:8px;width:92%;max-width:420px;margin-top:12px}.btn{flex:1;padding:14px;border-radius:99px;border:0;font-weight:900;font-size:14px}.btnY{background:#FFEB00;color:#000}.btnG{background:#222;color:#fff}
-.box{width:92%;max-width:420px;background:#121212;border:1px solid #333;border-radius:16px;padding:12px;margin-top:10px}
+.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0;transition:.3s}.tab,.lvl{flex:1;padding:10px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:12px}.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
+.pillRow{display:flex;gap:6px;justify-content:center;margin:6px 0;flex-wrap:wrap}.pill{background:#1a1a1a;border:1px solid #333;padding:5px 12px;border-radius:99px;font-size:12px}.pill b{color:#FFEB00}
+.flash{color:#FFEB00;font-weight:900;text-align:center;margin:8px 0;min-height:22px;font-size:19px}.timeT{color:#aaa;font-size:12px;text-align:center;min-height:16px}
+.cd{font-size:80px;font-weight:900;display:none;height:80px;line-height:80px;text-align:center;color:#fff;text-shadow:0 0 25px #FFEB00}.cd.show{display:block;animation:pop.3s ease}@keyframes pop{0%{transform:scale(.5)}100%{transform:scale(1)}}
+.board{display:grid;gap:12px;width:92%;max-width:420px;margin-top:10px}.c3{grid-template-columns:1fr}.c4{grid-template-columns:1fr 1fr}.c5{grid-template-columns:1fr 1fr}
+.light{height:80px;border-radius:20px;border:0;font-size:19px;font-weight:900;color:#fff;opacity:.35;pointer-events:none}.light.active{opacity:1;pointer-events:auto}.light.on{filter:brightness(1.9);box-shadow:0 0 28px currentColor;transform:scale(1.03)}
+.controls{display:flex;gap:8px;width:92%;max-width:420px;margin-top:14px}.btn{flex:1;padding:14px;border-radius:99px;border:0;font-weight:900;font-size:14px}.btnY{background:#FFEB00;color:#000}.btnG{background:#222;color:#fff}
+.box{width:92%;max-width:420px;background:#121212;border:1px solid #333;border-radius:16px;padding:12px;margin-top:10px;transition:.3s}
 .nameI{width:100%;padding:12px;border-radius:12px;border:2px solid #333;background:#000;color:#fff;font-size:15px;font-weight:700}
 .code{font-size:30px;font-weight:900;letter-spacing:8px;color:#00FF88;text-align:center;margin:8px 0}
-.row{display:flex;justify-content:space-between;align-items:center;background:#000;padding:10px 12px;border-radius:10px;border:1px solid #222;margin-top:6px;font-size:13px}.row.me{border-color:#FFEB00;background:#1a1a00}.row.out{opacity:.35;text-decoration:line-through;border-color:#550000}
-.winner{font-size:20px;font-weight:900;text-align:center;margin-top:10px;color:#FFEB00;animation:pop.5s infinite alternate}
+.row{display:flex;justify-content:space-between;align-items:center;background:#000;padding:11px 12px;border-radius:12px;border:1px solid #222;margin-top:6px;font-size:13px}.row.me{border-color:#FFEB00;background:#1a1a00}.row.out{opacity:.4;text-decoration:line-through}
+.winner{font-size:22px;font-weight:900;text-align:center;color:#FFEB00}
+#mainLB{width:92%;max-width:420px;margin-top:12px} /* 排名喺燈下面 */
+
+/* 遊戲中極簡模式 */
+body.inGame.tabs, body.inGame.lvls, body.inGame.topBar, body.inGame #roomSetup, body.inGame #roomInfo, body.inGame.controls {display:none!important}
+body.inGame.h1{opacity:.2;font-size:14px}
+body.inGame #mainLB{display:block!important}
 </style>
 </head><body>
-<div class="topBar"><div style="font-size:11px;color:#666">方包包遊戲</div><div class="ver">V9.1 淘汰賽</div></div>
+<div class="topBar"><div style="font-size:11px;color:#666">方包包遊戲</div><div class="ver">V9.2 極簡版</div></div>
 <div class="h1"><b>燈號對決</b></div>
 <div class="tabs"><button class="tab active" id="tabS" onclick="setTab('single')">單人</button><button class="tab" id="tabP" onclick="setTab('party')">本地多人</button><button class="tab" id="tabR" onclick="setTab('room')">淘汰賽房間</button></div>
 <div class="lvls"><button class="lvl active" id="lvl3" onclick="setMode(3)">3盞</button><button class="lvl" id="lvl4" onclick="setMode(4)">4盞</button><button class="lvl" id="lvl5" onclick="setMode(5)">5盞</button></div>
 <div class="pillRow"><div class="pill">關卡 <b id="level">0</b></div><div class="pill">生存 <b id="aliveCount">0</b></div><div class="pill" id="timePill" style="display:none">⏱️ <b id="lastTime">0.00</b>s</div></div>
-<div class="flash" id="flashText">V9.1 淘汰賽 - 錯1次即出局</div>
+<div class="flash" id="flashText">V9.2 極簡 - 開始後自動簡潔</div>
 <div class="cd" id="cd">3</div><div class="timeT" id="timeText"></div>
 <div class="board c3" id="board"></div>
-<div class="controls"><button class="btn btnY" id="btnStart">▶️ 開始</button><button class="btn btnG" id="btnReset">↻ 重置</button></div>
+
+<!-- 排名直接喺燈掣下面，你要嘅位置 -->
+<div id="mainLB"></div>
+
+<div class="controls"><button class="btn btnY" id="btnStart">▶️ 開始</button><button class="btn btnG" id="btnReset">↻ 重置 / 顯示返按鍵</button></div>
+
 <div class="box" id="roomBox" style="display:none">
-<div style="font-weight:900">💀 淘汰賽 - 最後1人勝利</div>
+<div id="roomSetup">
+<div style="font-weight:900">💀 淘汰賽 - 最後1人勝</div>
 <input id="nameInput" class="nameI" style="margin-top:10px" placeholder="你的名稱" maxlength="10">
 <div style="display:flex;gap:6px;margin-top:10px"><button class="btn btnY" onclick="createRoom()">開新房間</button><button class="btn btnG" onclick="joinPrompt()">加入房間</button></div>
+</div>
 <div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div style="text-align:center;font-size:11px"><span id="roomLink" style="color:#00FF88;word-break:break-all"></span><br><button class="btn btnG" style="margin-top:6px;padding:8px 16px;font-size:12px" onclick="copyLink()">📋 複製Link</button></div></div>
-<div id="roomPlayers" style="margin-top:8px"></div><div id="leaderboard" style="margin-top:8px"></div>
+<div id="roomPlayers" style="margin-top:8px"></div>
 <div id="progress" style="text-align:center;margin-top:8px;font-size:12px;color:#888"></div>
 </div>
 
@@ -48,115 +61,78 @@ function beep(f,d){ try{ const c=getCtx(),o=c.createOscillator(),g=c.createGain(
 function setTab(m){ playMode=m; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); $('tab'+(m==='single'?'S':m==='party'?'P':'R')).classList.add('active'); $('roomBox').style.display=m==='room'?'block':'none'; resetGame(); }
 function setMode(m){ mode=m; document.querySelectorAll('.lvl').forEach(b=>b.classList.remove('active')); $('lvl'+m).classList.add('active'); buildBoard(); if(isHost) broadcast({type:'mode',mode:m}); }
 function buildBoard(){ const b=$('board'); b.innerHTML=''; b.className='board c'+mode; for(let i=0;i<mode;i++){ let btn=document.createElement('button'); btn.className='light'; btn.id='light'+i; btn.style.background=colors[i].bg; btn.textContent=colors[i].label; btn.onclick=()=>handlePress(i); b.appendChild(btn);} setActive(false); }
-function setActive(o){ if(myOut) return setActiveOut(); document.querySelectorAll('.light').forEach(l=>{ if(o) l.classList.add('active'); else l.classList.remove('active'); }); }
-function setActiveOut(){ document.querySelectorAll('.light').forEach(l=>l.classList.remove('active')); }
+function setActive(o){ if(myOut){ document.querySelectorAll('.light').forEach(l=>l.classList.remove('active')); return; } document.querySelectorAll('.light').forEach(l=>{ if(o) l.classList.add('active'); else l.classList.remove('active'); }); }
 function lightOn(i){ let el=$('light'+i); if(!el) return; el.classList.add('on'); beep(colors[i].f,0.22); setTimeout(()=>el.classList.remove('on'),300); }
 async function doCountdown(){ $('flashText').style.display='none'; $('cd').style.display='block'; for(let c=3;c>=1;c--){ $('cd').textContent=c; $('cd').classList.remove('show'); void $('cd').offsetWidth; $('cd').classList.add('show'); beep(800,0.12); await new Promise(r=>setTimeout(r,700)); } $('cd').textContent='GO!'; beep(1200,0.35); await new Promise(r=>setTimeout(r,400)); $('cd').style.display='none'; $('flashText').style.display='block'; }
 function startTimer(){ startTime=performance.now(); $('timeText').textContent='⏱️ 計時中...'; }
 function stopTimer(){ let e=(performance.now()-startTime)/1000; $('timePill').style.display='inline-flex'; $('lastTime').textContent=e.toFixed(2); return e; }
-async function showSequence(){ showing=true; setActive(false); $('flashText').textContent='第'+level+'關 - 睇住 '+seq.length+' 盞'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,300)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,600)); } showing=false; if(!myOut) setActive(true); else { $('flashText').textContent='💀 你已出局 - 觀戰中'; } if(!myOut){ $('flashText').textContent='第'+level+'關 - '+(myName||'你')+' 按 '+seq.length+' 盞'; startTimer(); player=[]; } }
+async function showSequence(){ showing=true; setActive(false); $('flashText').textContent='第'+level+'關 - 睇 '+seq.length+' 盞'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,300)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,600)); } showing=false; if(!myOut) setActive(true); else $('flashText').textContent='💀 觀戰中 - 剩'+aliveList.length+'人'; if(!myOut){ $('flashText').textContent='第'+level+'關 - 按 '+seq.length+' 盞'; startTimer(); player=[]; } }
 
 async function nextLevelHost(){
  level++; $('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); levelResults=[]; $('progress').textContent='';
- broadcast({type:'seq',seq:seq,level:level,alive:aliveList});
- await showSequence();
+ broadcast({type:'seq',seq:seq,level:level,alive:aliveList}); await showSequence();
 }
+function enterGameMode(){ document.body.classList.add('inGame'); }
+function exitGameMode(){ document.body.classList.remove('inGame'); }
+
 async function startGame(){
  getCtx(); let nameVal=$('nameInput').value.trim()||localStorage.getItem('lampName')||''; if(playMode==='room'&&!nameVal){ nameVal=prompt('輸入名稱：')||''; nameVal=nameVal.trim().slice(0,10); if(nameVal) $('nameInput').value=nameVal; } myName=nameVal||'玩家'; if(playMode==='room') localStorage.setItem('lampName',myName);
- if(playMode==='room' &&!peer){ alert('請先開房'); return; }
- if(playMode==='room' &&!isHost){ $('flashText').textContent='等房主開始...'; return; }
+ if(playMode==='room' &&!peer){ alert('請先開房'); return; } if(playMode==='room' &&!isHost){ $('flashText').textContent='等房主開始...'; return; }
  seq=[]; level=0; outList=[]; myOut=false; aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]); $('aliveCount').textContent=aliveList.length; updateList();
- playing=true; if(playMode==='room' && isHost){ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevelHost(); } else { await doCountdown(); await nextLevelHost(); }
+ playing=true; enterGameMode();
+ if(playMode==='room' && isHost){ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevelHost(); } else { await doCountdown(); await nextLevelHost(); }
 }
 function handlePress(i){
  if(myOut) return; if(!playing||showing) return; lightOn(i); player.push(i); let idx=player.length-1;
  if(player[idx]!==seq[idx]){
-   myOut=true; $('flashText').textContent='💀 '+(myName||'你')+' 按錯出局！'; beep(150,0.6); setActiveOut(); $('timeText').textContent='已出局，觀戰中';
-   if(playMode==='room'){ sendResult(999,false,true); } else { setTimeout(()=>resetGame(),1500); }
+   myOut=true; $('flashText').textContent='💀 '+(myName||'你')+' 出局！'; beep(150,0.6); setActive(false); $('timeText').textContent='已出局，觀戰中';
+   if(playMode==='room'){ sendResult(999,false,true); } else { exitGameMode(); setTimeout(()=>resetGame(),1500); }
    return;
  }
  if(player.length===seq.length){
    let t=stopTimer();
    if(playMode==='single'){ $('flashText').textContent='✅ 第'+level+'關 '+t.toFixed(2)+'s'; setTimeout(()=>nextLevelHost(),1000); }
-   else { $('flashText').textContent='✅ 第'+level+'關完成 - 等其他人'; sendResult(t,true,false); setActive(false); }
+   else { $('flashText').textContent='✅ 完成 - 等其他人'; sendResult(t,true,false); setActive(false); }
  }
 }
-function resetGame(){ seq=[]; player=[]; level=0; playing=false; showing=false; myOut=false; outList=[]; aliveList=[]; $('level').textContent=0; $('aliveCount').textContent=0; $('flashText').textContent='V9.1 淘汰賽就緒'; $('timeText').textContent=''; $('timePill').style.display='none'; setActive(false); $('cd').style.display='none'; $('flashText').style.display='block'; $('progress').textContent=''; $('leaderboard').innerHTML=''; }
+function resetGame(){ seq=[]; player=[]; level=0; playing=false; showing=false; myOut=false; outList=[]; aliveList=[]; exitGameMode(); $('level').textContent=0; $('aliveCount').textContent=0; $('flashText').textContent='V9.2 極簡就緒'; $('flashText').style.display='block'; $('timeText').textContent=''; $('timePill').style.display='none'; $('cd').style.display='none'; setActive(false); $('progress').textContent=''; $('mainLB').innerHTML=''; $('roomPlayers').innerHTML=''; }
 
 function loadPeer(cb){ if(window.Peer) return cb(); let s=document.createElement('script'); s.src='https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js'; s.onload=cb; document.head.appendChild(s); }
-function createRoom(){ myName=$('nameInput').value.trim(); if(!myName){ alert('輸入名稱'); return; } localStorage.setItem('lampName',myName); loadPeer(()=>{ let id=Math.random().toString(36).substring(2,6).toUpperCase(); isHost=true; if(peer) peer.destroy(); peer=new Peer('lamp-'+id); $('status')?$('status').textContent='開房中...':null; peer.on('open',()=>{ $('roomCode').textContent=id; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+id; $('roomLink').textContent=link; history.replaceState(null,'','?room='+id); aliveList=[myName]; updateList(); }); peer.on('connection',c=>{ connList.push(c); c.on('data',d=>handleData(d,c)); c.on('open',()=>{ c.send({type:'mode',mode:mode}); updateList(); }); c.on('close',()=>{ connList=connList.filter(x=>x!==c); aliveList=aliveList.filter(n=>n!==c.playerName); updateList(); }); }); }); }
+function createRoom(){ myName=$('nameInput').value.trim(); if(!myName){ alert('輸入名稱'); return; } localStorage.setItem('lampName',myName); loadPeer(()=>{ let id=Math.random().toString(36).substring(2,6).toUpperCase(); isHost=true; if(peer) peer.destroy(); peer=new Peer('lamp-'+id); peer.on('open',()=>{ $('roomCode').textContent=id; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+id; $('roomLink').textContent=link; history.replaceState(null,'','?room='+id); aliveList=[myName]; updateList(); }); peer.on('connection',c=>{ connList.push(c); c.on('data',d=>handleData(d,c)); c.on('open',()=>{ c.send({type:'mode',mode:mode}); updateList(); }); c.on('close',()=>{ connList=connList.filter(x=>x!==c); updateList(); }); }); }); }
 function joinPrompt(){ myName=$('nameInput').value.trim(); if(!myName){ alert('輸入名稱'); return; } localStorage.setItem('lampName',myName); let c=prompt('房間碼:'); if(!c) return; joinRoom(c.toUpperCase().trim()); }
 function joinRoom(code){ loadPeer(()=>{ if(peer) peer.destroy(); peer=new Peer(); peer.on('open',()=>{ myConn=peer.connect('lamp-'+code,{reliable:true}); myConn.on('open',()=>{ $('roomCode').textContent=code; $('roomInfo').style.display='block'; $('roomLink').textContent=location.href; myConn.send({type:'join',name:myName}); }); myConn.on('data',d=>handleData(d)); }); }); }
 
 async function handleData(data,conn){
  if(!data) return;
  if(data.type==='mode'){ mode=data.mode; buildBoard(); }
- if(data.type==='countdown'){ aliveList=data.alive||aliveList; $('aliveCount').textContent=aliveList.length; playing=true; myOut=false; await doCountdown(); $('flashText').textContent='等緊出燈...'; }
- if(data.type==='seq'){ seq=data.seq; level=data.level; aliveList=data.alive||aliveList; $('level').textContent=level; $('aliveCount').textContent=aliveList.length; playing=true; levelResults=[]; await showSequence(); }
+ if(data.type==='countdown'){ aliveList=data.alive||aliveList; $('aliveCount').textContent=aliveList.length; playing=true; myOut=outList.includes(myName); enterGameMode(); await doCountdown(); $('flashText').textContent=myOut?'💀 觀戰中':'等出燈...'; }
+ if(data.type==='seq'){ seq=data.seq; level=data.level; aliveList=data.alive||aliveList; $('level').textContent=level; $('aliveCount').textContent=aliveList.length; playing=true; enterGameMode(); await showSequence(); }
  if(data.type==='join' && isHost){ if(conn) conn.playerName=data.name; aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]); updateList(); }
  if(data.type==='result'){
-   if(data.isOut){
-     outList.push(data.name); aliveList=aliveList.filter(n=>n!==data.name);
-     $('aliveCount').textContent=aliveList.length;
-     $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人';
-     renderBoard();
-     if(isHost){
-       broadcast({type:'out',name:data.name,alive:aliveList});
-       if(aliveList.length===1){
-         broadcast({type:'win',winner:aliveList[0]});
-         $('flashText').innerHTML='<div class=winner>🏆 '+aliveList[0]+' 勝出！</div>'; $('timeText').textContent='遊戲結束';
-         return;
-       }
-       if(aliveList.length>1){
-         // 檢查係咪呢關所有生存者都完成
-         let aliveDone=levelResults.filter(r=>aliveList.includes(r.name)).length + (data.name?0:0); // 已完成的不計出局者
-         // 簡化：出局即算完成呢關
-         checkAllDone();
-       }
-     }
-   } else {
-     levelResults.push({name:data.name,time:data.time});
-     $('progress').textContent='✅ '+levelResults.length+'/'+aliveList.length+' 完成第'+level+'關';
-     renderBoard();
-     if(isHost) checkAllDone();
-   }
+   if(data.isOut){ outList.push(data.name); aliveList=aliveList.filter(n=>n!==data.name); $('aliveCount').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; renderBoard(); if(isHost){ broadcast({type:'out',name:data.name,alive:aliveList}); if(aliveList.length===1){ broadcast({type:'win',winner:aliveList[0]}); $('flashText').innerHTML='<div class=winner>🏆 '+aliveList[0]+' 勝出！</div>'; setTimeout(()=>exitGameMode(),1000); return; } checkAllDone(); } }
+   else { levelResults.push({name:data.name,time:data.time}); $('progress').textContent='✅ '+levelResults.length+'/'+aliveList.length+' 完成'; renderBoard(); if(isHost) checkAllDone(); }
  }
- if(data.type==='out'){ outList.push(data.name); aliveList=data.alive; $('aliveCount').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; updateList(); renderBoard(); if(myName===data.name){ myOut=true; setActiveOut(); $('flashText').textContent='💀 你已出局 - 觀戰中'; } }
- if(data.type==='win'){ $('flashText').innerHTML='<div class=winner>🏆 '+data.winner+' 勝出！</div>'; $('timeText').textContent=data.winner===myName?'你贏咗！':'觀戰結束'; playing=false; setActive(false); }
- if(data.type==='countText'){ $('flashText').textContent=data.text; }
- if(data.type==='nextIn'){ $('progress').textContent='全部完成，第'+data.level+'關即將開始'; }
- if(data.type==='board'){ $('leaderboard').innerHTML=data.html; }
+ if(data.type==='out'){ outList.push(data.name); aliveList=data.alive; $('aliveCount').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; updateList(); renderBoard(); if(myName===data.name){ myOut=true; setActive(false); $('flashText').textContent='💀 你已出局'; } }
+ if(data.type==='win'){ $('flashText').innerHTML='<div class=winner>🏆 '+data.winner+' 勝出！</div>'; $('timeText').textContent=data.winner===myName?'你贏咗！':'遊戲結束'; playing=false; setActive(false); setTimeout(()=>exitGameMode(),1500); }
+ if(data.type==='board'){ $('mainLB').innerHTML=data.html; }
  if(data.type==='plist'){ $('roomPlayers').innerHTML=data.html; $('aliveCount').textContent=data.aliveLen||0; }
- if(data.type==='prog'){ $('progress').textContent=data.text; if(data.board) $('leaderboard').innerHTML=data.board; if(data.flash) $('flashText').innerHTML=data.flash; }
+ if(data.type==='prog'){ $('progress').textContent=data.text; if(data.board) $('mainLB').innerHTML=data.board; if(data.flash) $('flashText').innerHTML=data.flash; }
 }
-function checkAllDone(){
- if(levelResults.length>=aliveList.length){
-   broadcast({type:'nextIn',level:level+1});
-   let sec=3; $('flashText').textContent='剩'+aliveList.length+'人！'+sec+'秒後進入第'+(level+1)+'關...';
-   let timer=setInterval(()=>{ sec--; if(sec>0){ $('flashText').textContent='剩'+aliveList.length+'人！'+sec+'秒後進入第'+(level+1)+'關...'; broadcast({type:'prog',text:$('progress').textContent,board:$('leaderboard').innerHTML,flash:$('flashText').textContent}); } else clearInterval(timer); },1000);
-   setTimeout(async()=>{ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevelHost(); },3000);
- }
-}
+function checkAllDone(){ if(levelResults.length>=aliveList.length){ broadcast({type:'nextIn',level:level+1}); let sec=3; $('flashText').textContent='剩'+aliveList.length+'人！'+sec+'秒後第'+(level+1)+'關...'; let timer=setInterval(()=>{ sec--; if(sec>0){ $('flashText').textContent='剩'+aliveList.length+'人！'+sec+'秒後第'+(level+1)+'關...'; broadcast({type:'prog',text:$('progress').textContent,board:$('mainLB').innerHTML,flash:$('flashText').textContent}); } else clearInterval(timer); },1000); setTimeout(async()=>{ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevelHost(); },3000); } }
 function sendResult(t,ok,isOut){ let p={type:'result',name:myName,time:t,ok:ok,isOut:isOut}; if(isHost){ handleData(p,null); } else if(myConn && myConn.open){ myConn.send(p); } }
 function broadcast(o){ connList.forEach(c=>{ try{ if(c.open) c.send(o);}catch{}}); }
 function renderBoard(){
- let h='<div style=text-align:center;font-weight:900;margin-top:10px>🏆 第'+level+'關 - 生存'+aliveList.length+'人</div>';
+ let h='<div style=text-align:center;font-weight:900;margin-top:2px;font-size:14px>🏆 第'+level+'關 - 生存'+aliveList.length+'人</div>';
  let sorted=[...levelResults].sort((a,b)=>a.time-b.time);
  sorted.forEach((r,i)=>{ let ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.'; let me=r.name===myName; h+='<div class="row '+(me?'me':'')+'"><span>'+ic+' '+r.name+(me?' (你)':'')+'</span><span style=color:#0f8;font-weight:900>'+r.time.toFixed(2)+'s</span></div>'; });
  outList.forEach(name=>{ h+='<div class="row out"><span>💀 '+name+' (出局)</span><span>第'+level+'關</span></div>'; });
- aliveList.forEach(name=>{ if(!sorted.find(s=>s.name===name) &&!outList.includes(name)){ h+='<div class="row"><span>⏳ '+name+'</span><span>未完成</span></div>'; } });
- $('leaderboard').innerHTML=h; broadcast({type:'board',html:h});
+ $('mainLB').innerHTML=h; broadcast({type:'board',html:h});
 }
-function updateList(){
- let html='<div class=row>👥 生存'+aliveList.length+'人: '+aliveList.join(', ')+'</div>';
- if(outList.length>0) html+='<div class=row out>💀 出局: '+outList.join(', ')+'</div>';
- $('roomPlayers').innerHTML=html; $('aliveCount').textContent=aliveList.length;
- if(isHost) broadcast({type:'plist',html:html,aliveLen:aliveList.length});
-}
+function updateList(){ let html='<div class=row>👥 生存'+aliveList.length+'人: '+aliveList.join(', ')+'</div>'; if(outList.length>0) html+='<div class=row out>💀 出局: '+outList.join(', ')+'</div>'; $('roomPlayers').innerHTML=html; $('aliveCount').textContent=aliveList.length; if(isHost) broadcast({type:'plist',html:html,aliveLen:aliveList.length}); }
 function copyLink(){ navigator.clipboard.writeText($('roomLink').textContent).then(()=>alert('已複製')); }
 function checkUrl(){ let p=new URLSearchParams(location.search).get('room'); if(p){ setTab('room'); setTimeout(()=>{ let saved=localStorage.getItem('lampName'); if(saved) $('nameInput').value=saved; if($('nameInput').value.trim()) joinRoom(p.toUpperCase()); },500); } }
 $('btnStart').addEventListener('click', startGame);
-$('btnReset').addEventListener('click', resetGame);
+$('btnReset').addEventListener('click', ()=>{ exitGameMode(); resetGame(); });
 $('nameInput').addEventListener('input',()=>{ if($('nameInput').value.trim()) localStorage.setItem('lampName',$('nameInput').value.trim()); });
 if(myName) $('nameInput').value=myName;
 setMode(3); buildBoard(); checkUrl();
