@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>方包包 三盞燈對戰</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700;900&display=swap');
+*{box-sizing:border-box;font-family:'Noto Sans HK',sans-serif;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.h1{font-size:20px;font-weight:900;text-align:center;margin:8px 0 0}
+.h1 b{background:linear-gradient(90deg,#FFEB00,#00FF88);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tabs{display:flex;gap:6px;margin:8px 0;width:92%;max-width:420px}
+.tab{flex:1;padding:10px 4px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:13px;cursor:pointer;text-align:center}
+.tab.active{border-color:#FFEB00;background:#FFEB0022;color:#FFEB00}
+.levelSel{display:flex;gap:6px;margin:6px 0;width:92%;max-width:420px}
+.lvl{flex:1;padding:8px 4px;border-radius:10px;border:2px solid #333;background:#111;color:#fff;font-weight:900;font-size:12px;cursor:pointer}
+.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
+.pillRow{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap;justify-content:center}
+.pill{background:#1a1a1a;border:1px solid #333;padding:5px 12px;border-radius:99px;font-size:12px;font-weight:700}
+.pill b{color:#FFEB00}
+.flashText{font-size:18px;font-weight:900;text-align:center;margin:4px 0;min-height:24px;color:#FFEB00}
+.timeText{font-size:13px;text-align:center;min-height:20px;color:#aaa}
+.countdown{font-size:64px;font-weight:900;text-align:center;height:70px;line-height:70px;display:none}
+.countdown.show{display:block;animation:pop 0.4s ease}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1)}}
+.board{display:grid;gap:8px;width:92%;max-width:420px;margin-top:6px}
+.board.c3{grid-template-columns:1fr}.board.c4{grid-template-columns:1fr 1fr}.board.c5{grid-template-columns:1fr 1fr}
+.light{width:100%;height:72px;border-radius:16px;border:0;font-size:17px;font-weight:900;cursor:pointer;transition:0.1s;opacity:0.4;pointer-events:none}
+.light.active{opacity:1;pointer-events:auto}.light.on{filter:brightness(1.7);box-shadow:0 0 20px currentColor;transform:scale(1.03)}
+.controls{margin-top:10px;width:92%;max-width:420px;display:flex;gap:8px}
+.btn{flex:1;padding:13px;border-radius:99px;border:0;font-weight:900;font-size:14px;cursor:pointer}
+.btn-yellow{background:#FFEB00;color:#000}.btn-gray{background:#222;color:#fff}
+.multiBox{width:92%;max-width:420px;background:#111;border:1px solid #333;border-radius:16px;padding:12px;margin-top:8px;display:none}
+.inputRow{display:flex;gap:6px;margin:6px 0}
+.inputRow input{flex:1;padding:10px;border-radius:10px;border:1px solid #333;background:#000;color:#fff}
+.playerList{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.pRow{display:flex;justify-content:space-between;align-items:center;background:#000;padding:8px 10px;border-radius:10px;border:1px solid #222}
+.pRow.me{border-color:#FFEB00}.rank{font-weight:900;color:#FFEB00}
+.roomCode{font-size:28px;font-weight:900;letter-spacing:6px;text-align:center;color:#00FF88;margin:6px 0}
+</style>
+</head><body>
+<div class="h1"><b>方包包 燈號對決</b></div>
+<div class="tabs">
+<button class="tab active" id="tabSingle" onclick="setPlayMode('single')">單人玩</button>
+<button class="tab" id="tabParty" onclick="setPlayMode('party')">多人一齊</button>
+<button class="tab" id="tabRoom" onclick="setPlayMode('room')">進入房間</button>
+</div>
+<div class="levelSel">
+<button class="lvl active" id="lvl3" onclick="setMode(3)">3盞</button>
+<button class="lvl" id="lvl4" onclick="setMode(4)">4盞</button>
+<button class="lvl" id="lvl5" onclick="setMode(5)">5盞</button>
+</div>
+<div class="pillRow"><div class="pill">關卡 <b id="level">0</b></div><div class="pill">輪到 <b id="curPlayer">-</b></div><div class="pill" id="timePill" style="display:none">⏱️ <b id="lastTime">0.00</b>s</div></div>
+<div class="flashText" id="flashText">揀模式開始</div>
+<div class="countdown" id="cd">3</div>
+<div class="timeText" id="timeText"></div>
+<div class="board c3" id="board"></div>
+<div class="controls">
+<button class="btn btn-yellow" id="btnStart">▶️ 開始</button>
+<button class="btn btn-gray" id="btnReset">↻ 重置</button>
+</div>
+
+<div class="multiBox" id="partyBox">
+<div style="font-weight:900;font-size:14px">👥 本地多人 - 輪流挑戰</div>
+<div class="inputRow"><input id="pName" placeholder="玩家名 如 方包包"><button class="btn btn-yellow" style="flex:0 0 70px" onclick="addPlayer()">加入</button></div>
+<div class="playerList" id="playerList"></div>
+<div style="font-size:11px;color:#666;margin-top:6px">同一組燈號，每人輪流按，計總時間排名</div>
+</div>
+
+<div class="multiBox" id="roomBox">
+<div style="font-weight:900;font-size:14px">🌐 線上房間 - 用時間排名</div>
+<div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-yellow" onclick="createRoom()">開新房間</button><button class="btn btn-gray" onclick="joinPrompt()">加入房間</button></div>
+<div id="roomInfo" style="display:none"><div class="roomCode" id="roomCode">----</div><div style="text-align:center;font-size:12px;color:#888">Share 呢條link俾朋友：<br><span id="roomLink" style="color:#00FF88;word-break:break-all"></span></div></div>
+<div class="playerList" id="roomPlayerList"></div>
+</div>
+
+<script>
+let playMode='single', mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0, timerInt=null;
+let players=[], curIdx=0, roundResults=[];
+const colors=[{bg:'linear-gradient(180deg,#ff6b6b,#d00000)',label:'🔴 紅',f:440},{bg:'linear-gradient(180deg,#ffef8a,#ffb700)',label:'🟡 黃',f:550},{bg:'linear-gradient(180deg,#6bff8a,#009933)',label:'🟢 綠',f:660},{bg:'linear-gradient(180deg,#6bb8ff,#0044cc)',label:'🔵 藍',f:770},{bg:'linear-gradient(180deg,#d68aff,#8800cc)',label:'🟣 紫',f:880}];
+const $=id=>document.getElementById(id);
+let audioCtx=null; function getCtx(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+function beep(freq,dur,vol=0.35){ try{ const c=getCtx(); const o=c.createOscillator(); const g=c.createGain(); o.frequency.value=freq; g.gain.value=vol; o.connect(g); g.connect(c.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+dur); o.stop(c.currentTime+dur);}catch(e){} }
+function vibrate(m){try{navigator.vibrate(m)}catch{}}
+function setPlayMode(m){
+ playMode=m; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); $('tab'+(m==='single'?'Single':m==='party'?'Party':'Room')).classList.add('active');
+ $('partyBox').style.display=m==='party'?'block':'none'; $('roomBox').style.display=m==='room'?'block':'none';
+ if(m==='party'&&players.length===0){ players=[{name:'玩家1',times:[],total:0},{name:'玩家2',times:[],total:0}]; renderPlayers(); }
+ if(m==='room') checkUrlRoom(); resetGame();
+}
+function setMode(m){ mode=m; document.querySelectorAll('.lvl').forEach(b=>b.classList.remove('active')); $('lvl'+m).classList.add('active'); buildBoard(); resetGame(); }
+function buildBoard(){ const b=$('board'); b.innerHTML=''; b.className='board c'+mode; for(let i=0;i<mode;i++){ let btn=document.createElement('button'); btn.className='light'; btn.id='light'+i; btn.style.background=colors[i].bg; btn.textContent=colors[i].label; btn.onclick=()=>handlePress(i); b.appendChild(btn);} setActive(false); }
+function setActive(on){ document.querySelectorAll('.light').forEach(l=>{ if(on) l.classList.add('active'); else l.classList.remove('active'); }); }
+function lightOn(i){ let el=$('light'+i); if(!el) return; el.classList.add('on'); beep(colors[i].f,0.22,0.4); vibrate(20); setTimeout(()=>el.classList.remove('on'), 280); }
+async function doCountdown(){ $('flashText').style.display='none'; $('cd').style.display='block'; $('cd').classList.add('show'); for(let c=3;c>=1;c--){ $('cd').textContent=c; $('cd').classList.remove('show'); void $('cd').offsetWidth; $('cd').classList.add('show'); beep(800,0.12,0.5); await new Promise(r=>setTimeout(r,600)); } $('cd').textContent='GO!'; beep(1200,0.35,0.6); await new Promise(r=>setTimeout(r,400)); $('cd').style.display='none'; $('flashText').style.display='block'; }
+function startTimer(){ startTime=performance.now(); $('timeText').textContent='⏱️ 計時中...'; $('timePill').style.display='none'; }
+function stopTimer(){ let e=(performance.now()-startTime)/1000; $('timePill').style.display='inline-flex'; $('lastTime').textContent=e.toFixed(2); return e; }
+async function showSequence(){ showing=true; setActive(false); $('flashText').textContent=`提示 ${seq.length} 盞`; $('timeText').textContent='睇住...'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,200)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,500)); } showing=false; setActive(true); $('flashText').textContent=`${players[curIdx]?.name||'你'} - 按 ${seq.length} 盞`; startTimer(); player=[]; }
+async function nextLevel(){ level++; $('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); await showSequence(); }
+async function startGame(){ getCtx(); if(playMode!=='single'&&players.length===0){ alert('請先加入玩家'); return; } seq=[]; player=[]; level=0; curIdx=0; roundResults=[]; players.forEach(p=>{p.times=[];p.total=0}); $('level').textContent=0; setActive(false); playing=true; $('timePill').style.display='none'; if(playMode!=='single') $('curPlayer').textContent=players[0].name; await doCountdown(); await nextLevel(); }
+function handlePress(i){
+ if(!playing||showing) return; lightOn(i); player.push(i); let idx=player.length-1;
+ if(player[idx]!==seq[idx]){
+   let t=(performance.now()-startTime)/1000; $('flashText').textContent='❌ 錯咗！'; beep(150,0.5,0.5); vibrate([80,40,80]); playing=false; setActive(false);
+   $('timeText').textContent=`${players[curIdx]?.name||'你'} 失敗，用咗 ${t.toFixed(2)}秒`;
+   if(playMode!=='single'){ players[curIdx].times.push(999); nextPlayer(); } return;
+ }
+ if(player.length===seq.length){
+   let t=stopTimer(); $('flashText').textContent='✅ 啱晒！';
+   if(playMode==='single'){ $('timeText').innerHTML=`第 ${level} 關：<b style="color:#00FF88">${t.toFixed(2)}秒</b>`; setTimeout(()=>nextLevel(),1200); }
+   else { players[curIdx].times.push(t); players[curIdx].total+=t; $('timeText').innerHTML=`${players[curIdx].name} 完成：${t.toFixed(2)}秒`; setTimeout(()=>nextPlayer(),1200); }
+ }
+}
+function nextPlayer(){
+ curIdx++; if(curIdx>=players.length){ curIdx=0; level++; if(level>=3){ endMultiGame(); return; } seq.push(Math.floor(Math.random()*mode)); }
+ $('curPlayer').textContent=players[curIdx].name; showSequence();
+}
+function endMultiGame(){
+ playing=false; setActive(false);
+ let sorted=[...players].sort((a,b)=>a.total-b.total);
+ let html='<div style="font-weight:900;margin:10px 0;text-align:center">🏆 排名榜 (時間越短越勁)</div>';
+ sorted.forEach((p,i)=>{ html+=`<div class="pRow" style="${i===0?'border-color:#FFD700;background:#FFD70022':''}"><span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.'} ${p.name}</span><span class="rank">${p.total.toFixed(2)}s</span></div>`; });
+ $('playerList').innerHTML=html; $('roomPlayerList').innerHTML=html;
+ $('flashText').textContent='🏁 完場！睇排名';
+}
+function addPlayer(){ let n=$('pName').value.trim(); if(!n) return; if(players.length>=5){ alert('最多5人'); return; } players.push({name:n,times:[],total:0}); $('pName').value=''; renderPlayers(); }
+function renderPlayers(){ let html=''; players.forEach((p,i)=>{ html+=`<div class="pRow ${i===curIdx?'me':''}"><span>${i+1}. ${p.name}</span><span>${p.total? p.total.toFixed(2)+'s' : '等待'} ${i===curIdx?' ←輪到':''}</span></div>`; }); $('playerList').innerHTML=html; $('roomPlayerList').innerHTML=html; $('curPlayer').textContent=players[curIdx]?.name||'-'; }
+function resetGame(){ seq=[]; player=[]; level=0; playing=false; showing=false; $('level').textContent=0; $('flashText').textContent='按開始'; $('timeText').textContent=''; $('timePill').style.display='none'; setActive(false); }
+function createRoom(){ let code=Math.random().toString(36).substring(2,6).toUpperCase(); $('roomCode').textContent=code; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+code; $('roomLink').textContent=link; history.replaceState(null,'','?room='+code+'&mode='+mode); if(players.length===0) players=[{name:'房主',times:[],total:0}]; renderPlayers(); }
+function joinPrompt(){ let c=prompt('輸入房間碼:'); if(!c) return; location.search='?room='+c.toUpperCase(); }
+function checkUrlRoom(){ let p=new URLSearchParams(location.search); let r=p.get('room'); if(r){ $('roomCode').textContent=r; $('roomInfo').style.display='block'; $('roomLink').textContent=location.href; } }
+$('btnStart').addEventListener('click', startGame); $('btnReset').addEventListener('click', resetGame);
+setMode(3); setPlayMode('single'); buildBoard();
+</script></body></html>
