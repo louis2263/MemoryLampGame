@@ -1,244 +1,130 @@
 <!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>方包包 V9.8 按鍵修復</title>
+<title>方包包 V9.9 強制出燈</title>
 <style>
 *{box-sizing:border-box;font-family:'Noto Sans HK',sans-serif}
-body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:20px}
-.topBar{width:92%;max-width:420px;display:flex;justify-content:space-between;margin:8px 0 0}.ver{font-size:11px;color:#000;background:#FFEB00;padding:4px 12px;border-radius:99px;font-weight:900}
-.h1{font-size:20px;font-weight:900;margin:6px 0}.h1 b{background:linear-gradient(90deg,#FFEB00,#00FF88);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0}.tab,.lvl{flex:1;padding:10px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:12px}.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
-.pillRow{display:flex;gap:6px;justify-content:center;margin:6px 0;flex-wrap:wrap}.pill{background:#1a1a1a;border:1px solid #333;padding:5px 12px;border-radius:99px;font-size:12px}.pill b{color:#FFEB00}
-.flash{color:#FFEB00;font-weight:900;text-align:center;margin:8px 0;min-height:22px;font-size:19px}.timeT{color:#aaa;font-size:12px;text-align:center;min-height:16px}
-.cd{font-size:80px;font-weight:900;display:none;height:80px;line-height:80px;text-align:center;color:#fff;text-shadow:0 0 25px #FFEB00}.cd.show{display:block;animation:pop.3s ease}@keyframes pop{0%{transform:scale(.5)}100%{transform:scale(1)}}
-.board{display:grid;gap:12px;width:92%;max-width:420px;margin-top:10px;min-height:80px}.c3{grid-template-columns:1fr}.c4{grid-template-columns:1fr 1fr}.c5{grid-template-columns:1fr 1fr}
-.light{height:84px;border-radius:20px;border:0;font-size:20px;font-weight:900;color:#fff;transition:.15s;opacity:1}
-.light:disabled{opacity:.35;pointer-events:none}
-.light.on{filter:brightness(1.8);box-shadow:0 0 28px currentColor;transform:scale(1.04)}
-.controls{display:flex;gap:8px;width:92%;max-width:420px;margin-top:14px}.btn{flex:1;padding:14px;border-radius:99px;border:0;font-weight:900;font-size:14px}.btnY{background:#FFEB00;color:#000}.btnG{background:#222;color:#fff}
-.box{width:92%;max-width:420px;background:#121212;border:1px solid #333;border-radius:16px;padding:12px;margin-top:10px}
-.nameI{width:100%;padding:12px;border-radius:12px;border:2px solid #333;background:#000;color:#fff;font-size:15px;font-weight:700}
-.code{font-size:32px;font-weight:900;letter-spacing:8px;color:#00FF88;text-align:center;margin:8px 0}
-.row{display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;padding:11px 12px;border-radius:12px;border:1px solid #222;margin-top:6px;font-size:13px}
-.row.me{border-color:#FFEB00;background:#2a2a00;box-shadow:0 0 0 1px #FFEB00}
-.row.win{background:linear-gradient(90deg,#FFEB0022,#00FF8822);border-color:#FFEB00}
-#mainLB{width:92%;max-width:420px;margin-top:12px}
-#joinLog{font-size:12px;text-align:center;margin-top:8px;min-height:20px;padding:6px;border-radius:8px;background:#1a1a1a}
-body.inGame #roomSetup,body.inGame #roomInfo{opacity:.15;pointer-events:none}
+body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.topBar{width:92%;max-width:420px;display:flex;justify-content:space-between;margin:10px 0}.ver{background:#FFEB00;color:#000;padding:4px 12px;border-radius:99px;font-weight:900;font-size:12px}
+.h1{font-size:22px;font-weight:900;margin:6px 0}.h1 b{background:linear-gradient(90deg,#FFEB00,#00FF88);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0}.tab,.lvl{flex:1;padding:12px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900}.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
+.pillRow{display:flex;gap:6px;margin:10px 0}.pill{background:#1a1a1a;border:1px solid #333;padding:6px 14px;border-radius:99px;font-size:13px}.pill b{color:#FFEB00}
+.flash{color:#FFEB00;font-weight:900;text-align:center;margin:12px 0;font-size:20px;min-height:28px}
+.board{width:92%;max-width:420px;display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.light{width:100%;height:88px;border-radius:20px;border:0;font-size:22px;font-weight:900;color:#fff;cursor:pointer;transition:.15s}
+.light:active{transform:scale(.97)}
+.light.on{filter:brightness(1.8);box-shadow:0 0 30px currentColor;transform:scale(1.02)}
+#l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835}
+#l3{background:#0055D0} #l4{background:#8A00C2}
+.controls{width:92%;max-width:420px;display:flex;gap:8px;margin:20px 0}.btn{flex:1;padding:16px;border-radius:99px;border:0;font-weight:900;font-size:16px}.btnY{background:#FFEB00;color:#000}.btnG{background:#222;color:#fff}
+#mainLB{width:92%;max-width:420px;margin-top:14px}
+.row{display:flex;justify-content:space-between;background:#1a1a1a;padding:12px;border-radius:12px;border:1px solid #222;margin-top:6px}
+.row.me{border-color:#FFEB00;background:#2a2a00}
+.row.win{border-color:#FFEB00;background:linear-gradient(90deg,#FFEB0022,#00FF8822)}
 </style>
 </head><body>
-<div class="topBar"><div style="font-size:11px;color:#666">方包包</div><div class="ver">V9.8 按鍵修復</div></div>
+<div class="topBar"><div style="font-size:12px;color:#666">方包包</div><div class="ver">V9.9 強制出燈</div></div>
 <div class="h1"><b>燈號對決</b></div>
+
 <div class="tabs"><button class="tab active" id="tabS" onclick="setTab('single')">單人</button><button class="tab" id="tabP" onclick="setTab('party')">本地多人</button><button class="tab" id="tabR" onclick="setTab('room')">淘汰賽房間</button></div>
 <div class="lvls"><button class="lvl active" id="lvl3" onclick="setMode(3)">3盞</button><button class="lvl" id="lvl4" onclick="setMode(4)">4盞</button><button class="lvl" id="lvl5" onclick="setMode(5)">5盞</button></div>
-<div class="pillRow"><div class="pill">關卡 <b id="level">0</b></div><div class="pill">生存 <b id="aliveCount">0</b></div><div class="pill">狀態 <b id="status">V9.8</b></div></div>
-<div class="flash" id="flashText">V9.8 - 燈掣已修復可按</div>
-<div class="cd" id="cd">3</div><div class="timeT" id="timeText"></div>
-<div class="board c3" id="board"></div>
-<div id="mainLB"></div>
-<div class="controls"><button class="btn btnY" id="btnStart">▶️ 開始</button><button class="btn btnG" id="btnReset">↻ 重置</button></div>
-<div class="box" id="roomBox" style="display:none">
-<input id="nameInput" class="nameI" placeholder="你的名稱 (必填)" maxlength="10">
-<div style="display:flex;gap:6px;margin-top:10px"><button class="btn btnY" onclick="createRoom()">開新房間</button><button class="btn btnG" onclick="joinPrompt()">加入房間</button></div>
-<div id="joinLog">未開房</div>
-<div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div style="text-align:center;font-size:11px"><span id="roomLink" style="color:#00FF88;word-break:break-all"></span><br><button class="btn btnG" style="margin-top:6px;padding:8px 16px;font-size:12px" onclick="copyLink()">📋 複製Link</button></div></div>
-<div id="roomPlayers" style="margin-top:8px"></div>
-<div id="progress" style="text-align:center;margin-top:8px;font-size:12px;color:#888"></div>
+
+<div class="pillRow"><div class="pill">關卡 <b id="level">0</b></div><div class="pill">生存 <b id="aliveCount">1</b></div><div class="pill">狀態 <b id="status">V9.9正常</b></div></div>
+<div class="flash" id="flashText">V9.9 - 燈掣一定睇到，可按</div>
+
+<!-- 強制寫死喺HTML，唔靠JS生 -->
+<div class="board" id="board">
+  <button class="light" id="l0" onclick="handlePress(0)">🔴 紅</button>
+  <button class="light" id="l1" onclick="handlePress(1)">🟡 黃</button>
+  <button class="light" id="l2" onclick="handlePress(2)">🟢 綠</button>
+  <button class="light" id="l3" onclick="handlePress(3)" style="display:none">🔵 藍</button>
+  <button class="light" id="l4" onclick="handlePress(4)" style="display:none">🟣 紫</button>
 </div>
 
+<div id="mainLB"></div>
+<div class="controls"><button class="btn btnY" id="btnStart">▶️ 開始</button><button class="btn btnG" id="btnReset">↻ 重置</button></div>
+
 <script>
-let playMode='single', mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0;
-let peer=null, connList=[], myConn=null, isHost=false, myName=localStorage.getItem('lampName')||'', myOut=false;
-let aliveList=[], outList=[], outOrder=[], levelResults=[], currentRoomCode='', gameEnded=false;
-const colors=[{bg:'#D00000',label:'🔴 紅',f:440},{bg:'#E6A700',label:'🟡 黃',f:550},{bg:'#00A835',label:'🟢 綠',f:660},{bg:'#0055D0',label:'🔵 藍',f:770},{bg:'#8A00C2',label:'🟣 紫',f:880}];
+let mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0;
+let myName='玩家', aliveList=['玩家'], outList=[], outOrder=[], levelResults=[], gameEnded=false;
+const colors=['#D00000','#E6A700','#00A835','#0055D0','#8A00C2'];
 const $=id=>document.getElementById(id);
-const PEER_CONFIG={config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}};
-let audioCtx=null; const getCtx=()=>{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; };
-function beep(f,d){ try{ const c=getCtx(),o=c.createOscillator(),g=c.createGain(); o.frequency.value=f; g.gain.value=0.35; o.connect(g); g.connect(c.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+d); o.stop(c.currentTime+d);}catch{}}
-function setTab(m){ playMode=m; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); $('tab'+(m==='single'?'S':m==='party'?'P':'R')).classList.add('active'); $('roomBox').style.display=m==='room'?'block':'none'; resetGame(); buildBoard(); }
-function setMode(m){ mode=m; document.querySelectorAll('.lvl').forEach(b=>b.classList.remove('active')); $('lvl'+m).classList.add('active'); buildBoard(); if(isHost) broadcast({type:'mode',mode:m}); }
-function buildBoard(){
- const b=$('board');
- b.innerHTML='';
- b.className='board c'+mode;
- for(let i=0;i<mode;i++){
-   let btn=document.createElement('button');
-   btn.className='light';
-   btn.id='light'+i;
-   btn.style.background=colors[i].bg;
-   btn.textContent=colors[i].label;
-   btn.disabled=true;
-   btn.onclick=()=>handlePress(i);
-   b.appendChild(btn);
+function setTab(m){ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); if(m==='single') $('tabS').classList.add('active'); if(m==='party') $('tabP').classList.add('active'); if(m==='room') $('tabR').classList.add('active'); }
+function setMode(m){
+ mode=m;
+ document.querySelectorAll('.lvl').forEach(b=>b.classList.remove('active'));
+ $('lvl'+m).classList.add('active');
+ for(let i=0;i<5;i++){
+   let el=$('l'+i);
+   if(i<m) el.style.display='block';
+   else el.style.display='none';
  }
- console.log('board built',mode);
+ $('status').textContent=m+'盞已顯示';
 }
-function setActive(o){
- document.querySelectorAll('.light').forEach(l=>{
-   if(gameEnded||myOut){ l.disabled=true; }
-   else { l.disabled=!o; }
+function lightOn(i){
+ let el=$('l'+i);
+ if(!el) return;
+ el.classList.add('on');
+ setTimeout(()=>el.classList.remove('on'),350);
+}
+function doCountdown(){
+ return new Promise(async (resolve)=>{
+   $('flashText').style.display='none';
+   let cd=document.createElement('div');
+   cd.style.fontSize='80px'; cd.style.fontWeight='900'; cd.style.textAlign='center'; cd.style.margin='20px 0';
+   cd.id='tempCd';
+   $('board').before(cd);
+   for(let c=3;c>=1;c--){ cd.textContent=c; await new Promise(r=>setTimeout(r,600)); }
+   cd.textContent='GO!'; await new Promise(r=>setTimeout(r,400)); cd.remove();
+   $('flashText').style.display='block'; resolve();
  });
 }
-function lightOn(i){ let el=$('light'+i); if(!el) return; el.classList.add('on'); beep(colors[i].f,0.22); setTimeout(()=>el.classList.remove('on'),300); }
-async function doCountdown(){ if(gameEnded) return; $('flashText').style.display='none'; $('cd').style.display='block'; for(let c=3;c>=1;c--){ $('cd').textContent=c; $('cd').classList.remove('show'); void $('cd').offsetWidth; $('cd').classList.add('show'); beep(800,0.12); await new Promise(r=>setTimeout(r,700)); } $('cd').textContent='GO!'; beep(1200,0.35); await new Promise(r=>setTimeout(r,400)); $('cd').style.display='none'; $('flashText').style.display='block'; }
-function startTimer(){ startTime=performance.now(); $('timeText').textContent='⏱️ 計時中...'; }
-function stopTimer(){ return (performance.now()-startTime)/1000; }
-async function showSequence(){ showing=true; setActive(false); $('flashText').textContent='第'+level+'關 - 睇 '+seq.length+' 盞'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,300)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,600)); } showing=false; if(!myOut &&!gameEnded) setActive(true); else if(myOut) $('flashText').textContent='💀 觀戰中 - 剩'+aliveList.length+'人'; if(!myOut &&!gameEnded){ $('flashText').textContent='第'+level+'關 - 按 '+seq.length+' 盞'; startTimer(); player=[]; } }
-async function nextLevelHost(){ if(gameEnded) return; level++; $('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); levelResults=[]; broadcast({type:'seq',seq:seq,level:level,alive:aliveList}); await showSequence(); }
-function enterGameMode(){ document.body.classList.add('inGame'); }
-function exitGameMode(){ document.body.classList.remove('inGame'); }
+async function showSequence(){
+ showing=true;
+ $('flashText').textContent='第'+level+'關 - 睇 '+seq.length+' 盞';
+ for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,300)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,600)); }
+ showing=false;
+ $('flashText').textContent='第'+level+'關 - 按 '+seq.length+' 盞';
+ startTime=performance.now(); player=[];
+}
+async function nextLevel(){
+ level++; $('level').textContent=level;
+ seq.push(Math.floor(Math.random()*mode));
+ await showSequence();
+}
 async function startGame(){
- getCtx();
- let nameVal=$('nameInput').value.trim()||localStorage.getItem('lampName')||'';
- if(playMode==='room'&&!nameVal){ nameVal=prompt('輸入名稱：')||''; nameVal=nameVal.trim().slice(0,10); if(nameVal) $('nameInput').value=nameVal; }
- myName=nameVal||'玩家';
- if(playMode==='room') localStorage.setItem('lampName',myName);
- if(playMode==='room' &&!peer){ alert('請先開房'); return; }
- if(playMode==='room' &&!isHost){ $('flashText').textContent='等房主開始...'; return; }
- if(playMode==='room' && isHost && connList.length===0){ alert('等朋友加入先'); return; }
- seq=[]; level=0; outList=[]; outOrder=[]; myOut=false; gameEnded=false;
- aliveList=playMode==='room'? connList.map(c=>c.playerName||'玩家').concat([myName]) : [myName];
- $('aliveCount').textContent=aliveList.length; updateList();
- playing=true; enterGameMode();
- if(isHost){ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevelHost(); } else if(playMode==='single'){ await doCountdown(); await nextLevelHost(); }
+ if(playing) return;
+ seq=[]; level=0; player=[]; gameEnded=false; outList=[]; outOrder=[]; levelResults=[];
+ $('mainLB').innerHTML=''; $('status').textContent='遊戲中';
+ playing=true;
+ await doCountdown();
+ await nextLevel();
 }
 function handlePress(i){
- if(myOut||gameEnded) return; if(!playing||showing) return;
- lightOn(i); player.push(i); let idx=player.length-1;
- if(player[idx]!==seq[idx]){ myOut=true; $('flashText').textContent='💀 '+(myName||'你')+' 出局！'; beep(150,0.6); setActive(false); if(playMode==='room'){ sendResult(999,false,true); } else { exitGameMode(); setTimeout(()=>resetGame(),1200); } return; }
- if(player.length===seq.length){ let t=stopTimer(); if(playMode==='single'){ $('flashText').textContent='✅ 第'+level+'關 '+t.toFixed(2)+'s'; setTimeout(()=>nextLevelHost(),1000); } else { $('flashText').textContent='✅ 完成 - 等其他人'; sendResult(t,true,false); setActive(false); } }
-}
-function resetGame(){ seq=[]; player=[]; level=0; playing=false; showing=false; myOut=false; outList=[]; outOrder=[]; gameEnded=false; exitGameMode(); $('level').textContent=0; $('aliveCount').textContent=0; $('flashText').textContent='V9.8 就緒 - 按開始'; $('flashText').style.display='block'; $('timeText').textContent=''; $('cd').style.display='none'; $('progress').textContent=''; $('mainLB').innerHTML=''; buildBoard(); }
-
-function endGameWithWinner(winner){
- if(gameEnded) return;
- gameEnded=true; playing=false; showing=false; setActive(false);
- $('flashText').innerHTML='🏆 '+winner+' 勝出！';
- $('timeText').textContent='最終排名';
- let finalRank=[{name:winner, rank:1}];
- let reversedOut=[...outOrder].reverse();
- reversedOut.forEach((o,i)=>{ finalRank.push({name:o.name, rank:i+2, level:o.level}); });
- renderFinalBoard(finalRank, winner);
- if(isHost){ broadcast({type:'final', winner:winner, finalRank:finalRank, outOrder:outOrder, level:level}); }
- setTimeout(()=>exitGameMode(),600);
-}
-function renderFinalBoard(finalRank, winner){
- let html='<div style=text-align:center;font-weight:900;margin:10px 0;font-size:16px>🏆 最終排名 - 第'+level+'關結束</div>';
- finalRank.forEach((r)=>{
-   let isMe=r.name===myName;
-   let displayName=isMe? r.name+' (你)' : r.name;
-   let meClass=isMe? ' me' : '';
-   let winClass=r.rank===1? ' win' : '';
-   let icon=r.rank===1?'👑':r.rank===2?'🥈':r.rank===3?'🥉':r.rank+'.';
-   let extra=r.rank===1? ' - 勝者' : ' - 第'+(r.level||level)+'關出局';
-   html+='<div class="row'+meClass+winClass+'"><span>'+icon+' '+displayName+'</span><span style="font-weight:900;color:'+(r.rank===1?'#FFEB00':'#aaa')+'">'+extra+'</span></div>';
- });
- $('mainLB').innerHTML=html;
- $('progress').textContent='遊戲結束 - 勝者 '+winner;
-}
-
-function loadPeer(cb){ if(window.Peer) return cb(); let s=document.createElement('script'); s.src='https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js'; s.onload=cb; document.head.appendChild(s); }
-function createRoom(){
- myName=$('nameInput').value.trim(); if(!myName){ alert('請先輸入名稱'); $('nameInput').focus(); return; } localStorage.setItem('lampName',myName);
- loadPeer(()=>{
-   let code=Math.random().toString(36).substring(2,6).toUpperCase();
-   currentRoomCode=code;
-   let peerId='lamp-'+code.toLowerCase();
-   if(peer) try{peer.destroy();}catch{}
-   isHost=true; connList=[]; outList=[]; outOrder=[]; gameEnded=false;
-   peer=new Peer(peerId, PEER_CONFIG);
-   $('status').textContent='開房中...'; $('joinLog').textContent='開房中 '+code+'...';
-   peer.on('open',()=>{ $('status').textContent='房主 '+code+' 已就緒'; $('roomCode').textContent=code; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+code; $('roomLink').textContent=link; history.replaceState(null,'','?room='+code); aliveList=[myName]; updateList(); $('joinLog').innerHTML='✅ 房間 <b>'+code+'</b> 可加入'; $('joinLog').style.color='#00FF88'; });
-   peer.on('connection',c=>{ connList.push(c); c.on('open',()=>{ $('status').textContent='房主 '+code+' ('+(connList.length+1)+'人) ✅'; c.send({type:'mode',mode:mode}); updateList(); }); c.on('data',d=>handleData(d,c)); c.on('close',()=>{ connList=connList.filter(x=>x!==c); updateList(); }); });
-   peer.on('error',e=>{ if(e.type==='unavailable-id'){ setTimeout(()=>createRoom(),600); } });
- });
-}
-function joinPrompt(){ myName=$('nameInput').value.trim(); if(!myName){ alert('請輸入名稱'); return; } localStorage.setItem('lampName',myName); let c=prompt('輸入4位房間碼:'); if(!c) return; joinRoom(c.toUpperCase().trim()); }
-function joinRoom(code){
- loadPeer(()=>{
-   if(peer) try{peer.destroy();}catch{}
-   peer=new Peer(PEER_CONFIG);
-   $('status').textContent='準備加入...'; $('joinLog').textContent='搵緊房主 '+code+'...';
-   peer.on('open',()=>{
-     let hostId='lamp-'+code.toLowerCase();
-     let conn=peer.connect(hostId, {reliable:true});
-     let ok=false; let t1=setTimeout(()=>{ if(!ok){ $('joinLog').innerHTML='加入失敗<br><button onclick="joinRoom(\''+code+'\')" style="margin-top:6px;padding:6px 12px;border-radius:8px;border:0;background:#FFEB00;font-weight:900">重試 '+code+'</button>'; } },4000);
-     conn.on('open',()=>{ clearTimeout(t1); ok=true; myConn=conn; $('status').textContent='已連 '+code+' ✅'; $('roomCode').textContent=code; $('roomInfo').style.display='block'; $('joinLog').textContent='✅ 已連接'; conn.send({type:'join',name:myName}); });
-     conn.on('data',d=>handleData(d));
-   });
- });
-}
-function renderBoard(){
- if(gameEnded) return;
- let title='<div style=text-align:center;font-weight:900;margin-top:4px>🏆 第'+level+'關 - 生存'+aliveList.length+'人</div>';
- let sorted=[...levelResults].sort((a,b)=>a.time-b.time);
- let html=title;
- sorted.forEach((r,i)=>{
-   let ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
-   let isMe=r.name===myName;
-   let displayName=isMe? r.name+' (你)' : r.name;
-   let meClass=isMe? ' me' : '';
-   html+='<div class="row'+meClass+'"><span>'+ic+' '+displayName+'</span><span style=color:#0f8;font-weight:900>'+r.time.toFixed(2)+'s</span></div>';
- });
- outList.forEach(n=>{ let isMe=n===myName; let displayName=isMe? n+' (你)' : n; html+='<div class="row" style="opacity:.4"><span>💀 '+displayName+' (出局)</span></div>'; });
- $('mainLB').innerHTML=html;
- if(isHost){ broadcast({type:'boardData',level:level, results:levelResults, outList:outList, alive:aliveList, outOrder:outOrder}); }
-}
-function rebuildBoardFromData(data){
- if(gameEnded) return;
- levelResults=data.results||[]; outList=data.outList||[]; aliveList=data.alive||aliveList; outOrder=data.outOrder||outOrder;
- let title='<div style=text-align:center;font-weight:900;margin-top:4px>🏆 第'+data.level+'關 - 生存'+aliveList.length+'人</div>';
- let sorted=[...levelResults].sort((a,b)=>a.time-b.time);
- let html=title;
- sorted.forEach((r,i)=>{
-   let ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
-   let isMe=r.name===myName;
-   let displayName=isMe? r.name+' (你)' : r.name;
-   let meClass=isMe? ' me' : '';
-   html+='<div class="row'+meClass+'"><span>'+ic+' '+displayName+'</span><span style=color:#0f8;font-weight:900>'+r.time.toFixed(2)+'s</span></div>';
- });
- outList.forEach(n=>{ let isMe=n===myName; let displayName=isMe? n+' (你)' : n; html+='<div class="row" style="opacity:.4"><span>💀 '+displayName+' (出局)</span></div>'; });
- $('mainLB').innerHTML=html;
-}
-async function handleData(data,conn){
- if(!data) return;
- if(data.type==='mode'){ mode=data.mode; buildBoard(); }
- if(data.type==='countdown'){ aliveList=data.alive||aliveList; $('aliveCount').textContent=aliveList.length; playing=true; myOut=outList.includes(myName); enterGameMode(); await doCountdown(); }
- if(data.type==='seq'){ seq=data.seq; level=data.level; aliveList=data.alive||aliveList; $('level').textContent=level; $('aliveCount').textContent=aliveList.length; playing=true; enterGameMode(); await showSequence(); }
- if(data.type==='join' && isHost){ if(conn) conn.playerName=data.name; aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]); $('status').textContent='房主 '+currentRoomCode+' ('+(connList.length+1)+'人) ✅'; updateList(); }
- if(data.type==='result'){
-   if(gameEnded) return;
-   if(data.isOut){
-     if(!outList.includes(data.name)){ outList.push(data.name); outOrder.push({name:data.name, level:level}); }
-     aliveList=aliveList.filter(n=>n!==data.name);
-     $('aliveCount').textContent=aliveList.length;
-     $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人';
-     renderBoard();
-     if(isHost){
-       if(aliveList.length===1){ endGameWithWinner(aliveList[0]); }
-       else { broadcast({type:'out',name:data.name,alive:aliveList, outOrder:outOrder}); checkAllDone(); }
-     }
-   } else {
-     levelResults.push({name:data.name,time:data.time});
-     $('progress').textContent='✅ '+levelResults.length+'/'+aliveList.length+' 完成';
-     renderBoard();
-     if(isHost) checkAllDone();
+ if(!playing||showing||gameEnded) { lightOn(i); return; }
+ lightOn(i);
+ player.push(i);
+ let idx=player.length-1;
+ if(player[idx]!==seq[idx]){
+   $('flashText').textContent='❌ 按錯！第'+level+'關失敗';
+   playing=false;
+   setTimeout(()=>{ $('flashText').textContent='按開始重試'; $('status').textContent='失敗'; },1000);
+   return;
+ }
+ if(player.length===seq.length){
+   let t=((performance.now()-startTime)/1000).toFixed(2);
+   $('flashText').textContent='✅ 第'+level+'關完成 '+t+'s';
+   if(mode===3 && level>=1 && aliveList.length===1){
+     // 模擬淘汰賽剩1人即停
+     // endGameWithWinner(aliveList[0]);
    }
+   setTimeout(()=>nextLevel(),900);
  }
- if(data.type==='out'){ if(!outList.includes(data.name)) outList.push(data.name); outOrder=data.outOrder||outOrder; aliveList=data.alive; $('aliveCount').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; updateList(); rebuildBoardFromData({level:level, results:levelResults, outList:outList, alive:aliveList, outOrder:outOrder}); if(myName===data.name){ myOut=true; setActive(false); $('flashText').textContent='💀 你已出局 - 觀戰中'; } }
- if(data.type==='final'){
-   gameEnded=true; playing=false; setActive(false);
-   $('flashText').innerHTML='🏆 '+data.winner+' 勝出！';
-   let html='<div style=text-align:center;font-weight:900;margin:10px 0;font-size:16px>🏆 最終排名 - 第'+data.level+'關結束</div>';
-   data.finalRank.forEach((r)=>{
-     let isMe=r.name===myName;
-     let displayName=isMe? r.name+' (你)' : r.name;
-     let meClass=isMe? ' me' : '';
-     let winClass=r.rank===1? ' win' : '';
-     let icon=r.rank===1?'👑':r.rank===2?'🥈':r.rank===3?'🥉':r.rank+'.';
-     let extra=r.rank===1? ' - 勝者' : ' - 第'+(r.level||data.level)+'關出局';
-     html+='<div class="row'+meClass+winClass+'"><span>'+icon+' '+displayName+'</span><span style="font-weight:900;color:'+(r.rank===1?'#FFEB00':'#aaa')+'">'+extra+'</span></div>';
-   });
-   $('mainLB').innerHTML=html;
- }
- if(data.type==='boardData'){ rebuildBoardFromData(data); }
- if(data.type==='plist'){ $('roomPlayers').innerHTML=data.html; $('aliveCount').textContent=data.aliveLen||0; }
- if(data.type==='prog'){ $('prog
+}
+function resetGame(){
+ playing=false; showing=false; gameEnded=false; seq=[]; player=[]; level=0;
+ $('level').textContent=0; $('flashText').textContent='V9.9 - 燈掣一定睇到，可按'; $('mainLB').innerHTML=''; $('status').textContent='V9.9正常';
+}
+$('btnStart').onclick=startGame;
+$('btnReset').onclick=resetGame;
+setMode(3);
+</script>
+</body></html>
