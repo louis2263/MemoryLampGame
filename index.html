@@ -1,166 +1,92 @@
 <!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>方包包 V11.0 終極修復</title>
+<title>方包包 V11.1 單人一定得</title>
 <style>
-*{box-sizing:border-box;font-family:'Noto Sans HK',sans-serif}
-body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:30px}
-.topBar{width:92%;max-width:420px;display:flex;justify-content:space-between;margin:10px 0 0}.ver{background:#FFEB00;color:#000;padding:4px 12px;border-radius:99px;font-weight:900;font-size:11px}
-.h1{font-size:22px;font-weight:900;margin:8px 0}.h1 b{background:linear-gradient(90deg,#FFEB00,#00FF88);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0}.tab,.lvl{flex:1;padding:14px;border-radius:14px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:13px;text-align:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
-.pillRow{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0}.pill{background:#1a1a1a;border:1px solid #333;padding:6px 14px;border-radius:99px;font-size:12px}.pill b{color:#FFEB00}
-.flash{color:#FFEB00;font-weight:900;text-align:center;margin:10px 0;min-height:24px;font-size:19px}
-.timeT{color:#aaa;font-size:13px;text-align:center;min-height:18px}
-.board{width:92%;max-width:420px;display:flex;flex-direction:column;gap:12px;margin-top:12px}
-.light{width:100%;height:88px;border-radius:20px;border:0;font-size:22px;font-weight:900;color:#fff;cursor:pointer;position:relative;z-index:1}
+body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;font-family:sans-serif;padding-bottom:30px}
+.ver{background:#FFEB00;color:#000;padding:4px 12px;border-radius:99px;font-weight:900;font-size:12px;position:fixed;top:8px;right:8px;z-index:10}
+h1{margin:50px 0 10px;color:#FFEB00}
+.flash{color:#FFEB00;font-weight:900;font-size:22px;margin:15px 0;min-height:30px;text-align:center}
+#cd{font-size:90px;font-weight:900;color:#FFEB00;display:none;text-align:center;margin:10px}
+.light{width:92%;max-width:400px;height:90px;border-radius:20px;border:0;margin:8px 0;font-size:24px;font-weight:900;color:#fff}
 .light:active{transform:scale(.97)}
-.light.on{filter:brightness(1.9);box-shadow:0 0 30px currentColor}
-#l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835} #l3{background:#0055D0} #l4{background:#8A00C2}
-.controls{width:92%;max-width:420px;display:flex;gap:8px;margin-top:18px;position:relative;z-index:2}.btn{flex:1;padding:16px;border-radius:99px;border:0;font-weight:900;font-size:16px;cursor:pointer}.btnY{background:#FFEB00;color:#000}.btnG{background:#222;color:#fff}
-.box{width:92%;max-width:420px;background:#121212;border:1px solid #444;border-radius:16px;padding:14px;margin-top:14px;position:relative;z-index:2}
-.nameI{width:100%;padding:14px;border-radius:12px;border:2px solid #555;background:#000;color:#fff;font-size:16px;font-weight:700}
-.code{font-size:34px;font-weight:900;letter-spacing:8px;color:#00FF88;text-align:center;margin:10px 0}
-.row{display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;padding:11px 12px;border-radius:12px;border:1px solid #222;margin-top:6px;font-size:13px}
-#mainLB{width:92%;max-width:420px;margin-top:12px}
-#cd{font-size:80px;font-weight:900;color:#FFEB00;text-align:center;display:none;margin:10px 0;text-shadow:0 0 20px #FFEB00}
-#cd.show{display:block;animation:pop.3s ease}@keyframes pop{0%{transform:scale(.5)}100%{transform:scale(1)}}
-#joinLog{font-size:13px;text-align:center;margin-top:10px;padding:10px;border-radius:8px;background:#222;color:#FFEB00}
+#l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835}
+#l0.on,#l1.on,#l2.on{box-shadow:0 0 30px #fff;filter:brightness(1.5)}
+.btn{width:92%;max-width:400px;padding:18px;border-radius:99px;border:0;font-weight:900;font-size:18px;margin:10px 0}
+.btnY{background:#FFEB00;color:#000}.btnG{background:#333;color:#fff}
 </style>
 </head><body>
-<div class="topBar"><div style="font-size:11px;color:#666">方包包</div><div class="ver">V11.0 終極修復</div></div>
-<div class="h1"><b>燈號對決</b></div>
-
-<div class="tabs">
-<div class="tab active" id="tab-single">單人</div>
-<div class="tab" id="tab-party">本地多人</div>
-<div class="tab" id="tab-room">淘汰賽房間</div>
-</div>
-<div class="lvls">
-<div class="lvl active" id="lvl-3">3盞</div>
-<div class="lvl" id="lvl-4">4盞</div>
-<div class="lvl" id="lvl-5">5盞</div>
-</div>
-
-<div class="pillRow"><div class="pill">關卡 <b id="level">0</b></div><div class="pill">生存 <b id="aliveCount">1</b></div><div class="pill">狀態 <b id="status">正常</b></div></div>
-<div class="flash" id="flashText">V11.0 - 按鍵一定得</div>
+<div class="ver">V11.1 單人一定得</div>
+<h1>燈號對決</h1>
+<div class="flash" id="flash">V11.1 - 按開始一定有3-2-1-GO有聲</div>
 <div id="cd">3</div>
-<div class="timeT" id="timeText">點 開始 會有 3-2-1-GO 有聲</div>
 
-<div class="board">
-<button class="light" id="l0">🔴 紅</button>
-<button class="light" id="l1">🟡 黃</button>
-<button class="light" id="l2">🟢 綠</button>
-<button class="light" id="l3" style="display:none">🔵 藍</button>
-<button class="light" id="l4" style="display:none">🟣 紫</button>
-</div>
+<button class="light" id="l0" onclick="press(0)">🔴 紅</button>
+<button class="light" id="l1" onclick="press(1)">🟡 黃</button>
+<button class="light" id="l2" onclick="press(2)">🟢 綠</button>
 
-<div id="mainLB"></div>
-<div class="controls"><button class="btn btnY" id="btnStart">▶️ 開始</button><button class="btn btnG" id="btnReset">↻ 重置</button></div>
+<button class="btn btnY" onclick="startGame()">▶️ 開始</button>
+<button class="btn btnG" onclick="resetGame()">↻ 重置</button>
 
-<div class="box" id="roomBox" style="display:none">
-<div style="font-weight:900">💀 淘汰賽房間</div>
-<input id="nameInput" class="nameI" style="margin-top:12px" placeholder="你的名稱 必填 例如 louis" maxlength="10">
-<div style="display:flex;gap:8px;margin-top:12px">
-<button class="btn btnY" id="btnCreate">開新房間</button>
-<button class="btn btnG" id="btnJoin">加入房間</button>
-</div>
-<div id="joinLog">輸入名後開房，房主不要關頁，否則會案件失效</div>
-<div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div style="text-align:center"><span id="roomLink" style="color:#00FF88;word-break:break-all;font-size:11px"></span><br><button class="btn btnG" style="margin-top:8px;padding:10px 18px;font-size:13px" id="btnCopy">📋 複製Link</button></div></div>
-<div id="roomPlayers" style="margin-top:10px"></div>
-<div id="progress" style="text-align:center;margin-top:8px;font-size:13px;color:#888"></div>
-</div>
+<div id="level" style="margin-top:15px;color:#888">關卡 0</div>
 
 <script>
-// --- 完全獨立於 PeerJS，單人一定得 ---
-let mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0, playMode='single';
-let myName='', myOut=false, aliveList=[], outList=[], outOrder=[], levelResults=[], gameEnded=false;
-let peer=null, connList=[], myConn=null, isHost=false, currentRoomCode='';
-const freqs=[440,660,880,550,770];
-const $=id=>document.getElementById(id);
+let seq=[], player=[], level=0, playing=false, showing=false, startTime=0;
 let audioCtx=null;
-function getCtx(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
-function beep(f,d){ try{ let ctx=getCtx(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.frequency.value=f; g.gain.value=0.5; o.connect(g); g.connect(ctx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+d); o.stop(ctx.currentTime+d);}catch(e){} }
+function getAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+function beep(f,d){ try{ let ctx=getAudio(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.frequency.value=f; g.gain.value=0.6; o.connect(g); g.connect(ctx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+d); o.stop(ctx.currentTime+d);}catch(e){} }
 
-function setTab(m){
-  playMode=m;
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-  $('tab-'+m).classList.add('active');
-  $('roomBox').style.display = m==='room'?'block':'none';
-  $('status').textContent=m;
-  console.log('setTab',m);
-}
-function setMode(m){
-  mode=m;
-  document.querySelectorAll('.lvl').forEach(b=>b.classList.remove('active'));
-  $('lvl-'+m).classList.add('active');
-  for(let i=0;i<5;i++){ let el=$('l'+i); if(el) el.style.display=i<m?'block':'none'; }
-  if(isHost) broadcast({type:'mode',mode:m});
-  console.log('setMode',m);
-}
-function lightOn(i){ let el=$('l'+i); if(!el) return; el.classList.add('on'); beep(freqs[i],0.3); setTimeout(()=>el.classList.remove('on'),350); }
+function lightOn(i){ let el=document.getElementById('l'+i); if(!el) return; el.classList.add('on'); beep([440,660,880][i],0.3); setTimeout(()=>el.classList.remove('on'),350); }
 
 async function doCountdown(){
-  let cd=$('cd');
-  $('flashText').textContent='準備...';
-  cd.style.display='block';
-  for(let c=3;c>=1;c--){
-    cd.textContent=c; cd.classList.remove('show'); void cd.offsetWidth; cd.classList.add('show');
-    beep(900,0.2); await new Promise(r=>setTimeout(r,700));
-  }
-  cd.textContent='GO!'; beep(1400,0.5); await new Promise(r=>setTimeout(r,500));
-  cd.style.display='none';
+ document.getElementById('flash').style.display='none';
+ let cd=document.getElementById('cd'); cd.style.display='block';
+ for(let c=3;c>=1;c--){ cd.textContent=c; beep(900,0.2); await new Promise(r=>setTimeout(r,700)); }
+ cd.textContent='GO!'; beep(1500,0.5); await new Promise(r=>setTimeout(r,500));
+ cd.style.display='none'; document.getElementById('flash').style.display='block';
 }
-function startTimer(){ startTime=performance.now(); $('timeText').textContent='⏱️ 計時中...'; }
+function startTimer(){ startTime=performance.now(); }
 function stopTimer(){ return (performance.now()-startTime)/1000; }
-async function showSequence(){ showing=true; $('flashText').textContent='第'+level+'關 - 睇 '+seq.length+' 盞'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,500)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,700)); } showing=false; $('flashText').textContent='第'+level+'關 - 按 '+seq.length+' 盞'; startTimer(); player=[]; }
-async function nextLevelHost(){ if(gameEnded) return; level++; $('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); levelResults=[]; await showSequence(); }
 
-async function startGame(){
-  try{ getCtx(); beep(600,0.1); }catch{}
-  console.log('startGame',playMode);
-  if(playMode==='room'){
-    myName=$('nameInput').value.trim()||localStorage.getItem('lampName')||'';
-    if(!myName){ alert('請輸入名稱'); setTab('room'); $('nameInput').focus(); return; }
-    localStorage.setItem('lampName',myName);
-    if(!peer){ alert('請先開房間'); return; }
-    if(!isHost){ $('flashText').textContent='等房主開始'; return; }
-    if(connList.length===0){ alert('等朋友加入先'); return; }
-    aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]);
-  } else { aliveList=['玩家']; }
-  seq=[]; level=0; outList=[]; outOrder=[]; myOut=false; gameEnded=false;
-  $('aliveCount').textContent=aliveList.length; playing=true;
-  await doCountdown();
-  await nextLevelHost();
+async function showSeq(){
+ showing=true; document.getElementById('flash').textContent='第'+level+'關 睇 '+seq.length+' 盞';
+ for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,500)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,700)); }
+ showing=false; document.getElementById('flash').textContent='第'+level+'關 按 '+seq.length+' 盞'; startTimer(); player=[];
 }
-function handlePress(i){
-  lightOn(i);
-  if(!playing||showing||gameEnded||myOut) return;
-  player.push(i);
-  let idx=player.length-1;
-  if(player[idx]!==seq[idx]){
-    $('flashText').textContent='💀 按錯！出局！'; beep(150,0.8); playing=false;
-    setTimeout(()=>resetGame(),1200); return;
-  }
-  if(player.length===seq.length){
-    let t=stopTimer();
-    $('flashText').textContent='✅ 第'+level+'關 '+t.toFixed(2)+'s';
-    beep(1000,0.2);
-    if(playMode==='room'){ setTimeout(async()=>{ await doCountdown(); await nextLevelHost(); },1000); }
-    else { setTimeout(()=>nextLevelHost(),1000); }
-  }
+async function nextLevel(){
+ level++; document.getElementById('level').textContent='關卡 '+level;
+ seq.push(Math.floor(Math.random()*3));
+ await showSeq();
+}
+async function startGame(){
+ try{ getAudio(); }catch{}
+ beep(600,0.1);
+ if(playing) return;
+ seq=[]; level=0; player=[]; playing=true;
+ document.getElementById('flash').textContent='準備...';
+ await doCountdown();
+ await nextLevel();
+}
+function press(i){
+ lightOn(i);
+ if(!playing||showing) return;
+ player.push(i);
+ let idx=player.length-1;
+ if(player[idx]!==seq[idx]){
+   document.getElementById('flash').textContent='💀 按錯！出局！';
+   beep(150,0.8); playing=false;
+   setTimeout(()=>resetGame(),1500); return;
+ }
+ if(player.length===seq.length){
+   let t=stopTimer().toFixed(2);
+   document.getElementById('flash').textContent='✅ 第'+level+'關 '+t+'s 3秒後下一關';
+   beep(1200,0.2);
+   setTimeout(()=>nextLevel(),1200);
+ }
 }
 function resetGame(){
-  playing=false; showing=false; gameEnded=false; myOut=false; seq=[]; player=[]; level=0;
-  $('level').textContent=0; $('flashText').textContent='V11.0 就緒 - 按鍵已修復'; $('cd').style.display='none'; $('timeText').textContent='點 開始 會有 3-2-1-GO'; $('mainLB').innerHTML='';
+ playing=false; showing=false; seq=[]; player=[]; level=0;
+ document.getElementById('level').textContent='關卡 0';
+ document.getElementById('flash').textContent='V11.1 就緒 - 按開始';
+ document.getElementById('cd').style.display='none';
 }
-
-// 綁定事件 - 用 addEventListener 唔會被擋
-$('tab-single').addEventListener('click',()=>setTab('single'));
-$('tab-party').addEventListener('click',()=>setTab('party'));
-$('tab-room').addEventListener('click',()=>setTab('room'));
-$('lvl-3').addEventListener('click',()=>setMode(3));
-$('lvl-4').addEventListener('click',()=>setMode(4));
-$('lvl-5').addEventListener('click',()=>setMode(5));
-$('l0').addEventListener('click',()=>handlePress(0));
-$('l1').addEventListener('click',()=>handlePress(1));
-$('l2').addEventListener('click',()=>handlePress(2));
-$('l3').addEventListener('click',()=>handlePress(3));
-$('l4').addEventListener('click',()=>handlePress
+</script>
+</body></html>
