@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>方包包 燈號對決 Multiplayer</title>
+<!-- 載入 PeerJS -->
 <script src="https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js"></script>
+<!-- 載入 Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700;900&display=swap');
@@ -16,12 +18,14 @@ body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-d
 
 <body class="p-4 flex flex-col items-center select-none">
 
+<!-- 頂部列 -->
 <div class="w-full max-w-md flex justify-between items-center mb-4">
-    <div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v2.0 多人聯機版</div>
+    <div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v2.1 穩定多人版</div>
     <h1 class="text-xl font-black text-center m-0"><span class="bg-gradient-to-r from-yellow-300 to-emerald-400 bg-clip-text text-transparent">方包包 燈號對決</span></h1>
-    <div id="connectionStatus" class="text-xs px-2 py-1 bg-red-900/60 text-red-300 border border-red-700 rounded-full">未連線</div>
+    <div id="connectionStatus" class="text-xs px-2 py-1 bg-red-900/65 text-red-300 border border-red-700 rounded-full">未連線</div>
 </div>
 
+<!-- 1. 大廳畫面 -->
 <div id="lobbyScreen" class="w-full max-w-md flex flex-col gap-4">
     <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
         <h2 class="text-base font-bold text-yellow-200">🎮 遊戲大廳 / 多人連線</h2>
@@ -45,17 +49,18 @@ body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-d
     <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl">
         <h3 class="text-sm font-bold text-neutral-300 mb-2">💡 多人玩法說明</h3>
         <p class="text-xs text-neutral-400 leading-relaxed">
-            支援多位玩家同時連線！房主建立房間後分享 4 位數代碼。當中央燈號轉為<b>綠燈</b>時，鬥快按下搶答按鈕。紅燈偷跑會被扣分！
+            支援多位玩家同時連線！房主建立房間後會獲得一個<b>4位數代碼</b>。朋友輸入該代碼即可加入房間。當中央燈號轉為<b>綠燈</b>時鬥快按下搶答！紅燈偷跑會被扣分！
         </p>
     </div>
 </div>
 
+<!-- 2. 房主等待室 -->
 <div id="hostScreen" class="w-full max-w-md hidden flex-col gap-4">
     <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl text-center flex flex-col gap-3">
         <h2 class="text-base font-bold text-emerald-400">👑 多人房間已建立</h2>
-        <p class="text-xs text-neutral-400">請將以下 4 位數房間代碼分享給所有朋友：</p>
+        <p class="text-xs text-neutral-400">請將以下 4 位數房間代碼分享給朋友：</p>
         <div class="bg-neutral-800 border border-neutral-700 py-3 px-4 rounded-xl flex items-center justify-between">
-            <span id="roomCodeDisplay" class="text-2xl font-mono font-black text-yellow-300 tracking-widest">----</span>
+            <span id="roomCodeDisplay" class="text-3xl font-mono font-black text-yellow-300 tracking-widest">----</span>
             <button onclick="copyRoomCode()" class="bg-neutral-700 hover:bg-neutral-600 text-xs px-3 py-2 rounded-lg font-bold cursor-pointer">複製代碼</button>
         </div>
         
@@ -71,12 +76,13 @@ body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-d
     </div>
 </div>
 
+<!-- 3. 加入房間畫面 -->
 <div id="joinScreen" class="w-full max-w-md hidden flex-col gap-4">
     <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
         <h2 class="text-base font-bold text-yellow-300">🚪 加入多人房間</h2>
         <div>
             <label class="text-xs text-neutral-400 mb-1 block">輸入房主的 4 位數房間代碼：</label>
-            <input type="text" id="targetPeerIdInput" placeholder="例如: 4829" maxlength="6" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-mono text-xl tracking-widest text-center">
+            <input type="text" id="targetPeerIdInput" placeholder="例如: 4829" maxlength="4" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-mono text-2xl tracking-widest text-center">
         </div>
         <div id="joinStatusText" class="text-xs text-center text-neutral-400 min-h-[16px]"></div>
         <div class="flex gap-2">
@@ -86,8 +92,9 @@ body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-d
     </div>
 </div>
 
+<!-- 4. 遊戲主畫面 -->
 <div id="gameScreen" class="w-full max-w-md hidden flex-col gap-4">
-    <!-- 多人記分板 -->
+    <!-- 即時分數排行榜 -->
     <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl shadow-xl">
         <div class="text-xs font-bold text-neutral-400 mb-2 text-center">🏆 即時分數排行榜</div>
         <div id="scoreboardContainer" class="flex flex-col gap-1.5 max-h-28 overflow-y-auto">
@@ -100,7 +107,7 @@ body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-d
         <div id="lightBulb" class="w-28 h-28 rounded-full bg-neutral-800 border-4 border-neutral-700 shadow-lg flex items-center justify-center transition-all duration-200">
             <span id="lightText" class="text-xs font-black text-neutral-400">準備中</span>
         </div>
-        <div id="instructionText" class="mt-4 text-sm font-bold text-neutral-400 text-center px-4">等待回合開始...</div>
+        <div id="instructionText" class="mt-4 text-sm font-bold text-neutral-400 text-center px-4">等待房主開始回合...</div>
     </div>
 
     <!-- 搶答按鈕 -->
@@ -149,6 +156,7 @@ function updateStatus(text, type='error') {
     }
 }
 
+// 產生 4 位數隨機房號
 function generateRoomCode() {
     return Math.floor(1000 + Math.random() * 9000).toString();
 }
@@ -160,10 +168,17 @@ function hostGame() {
     updateStatus('建立中...', 'warning');
     
     const code = generateRoomCode();
-    myPeerId = 'bagel-mp-' + code;
+    myPeerId = 'bagel-v2-' + code;
     
-    if(peer) peer.destroy();
-    peer = new Peer(myPeerId, { debug: 1 });
+    if(peer) { peer.destroy(); }
+    
+    // 使用穩定嘅 PeerJS 設定
+    peer = new Peer(myPeerId, {
+        host: '0.peerjs.com',
+        port: 443,
+        secure: true,
+        debug: 1
+    });
 
     peer.on('open', (id) => {
         document.getElementById('roomCodeDisplay').innerText = code;
@@ -176,6 +191,8 @@ function hostGame() {
     peer.on('connection', (conn) => {
         conn.on('open', () => {
             connections[conn.peer] = conn;
+            // 立即發送現有玩家清單
+            conn.send({ type: 'UPDATE_PLAYERS', players: players });
         });
 
         conn.on('data', (data) => {
@@ -193,9 +210,9 @@ function hostGame() {
     peer.on('error', (err) => {
         console.error('Peer Error:', err);
         if(err.type === 'unavailable-id') {
-            hostGame();
+            hostGame(); // 房號重複則重試
         } else {
-            updateStatus('伺服器連線失敗');
+            updateStatus('建立失敗，請重試');
         }
     });
 }
@@ -223,7 +240,7 @@ function connectToPeer() {
     const codeInput = document.getElementById('targetPeerIdInput').value.trim();
     const joinStatus = document.getElementById('joinStatusText');
     
-    if(!codeInput || codeInput.length < 4) {
+    if(!codeInput || codeInput.length !== 4) {
         joinStatus.innerText = '請輸入正確的 4 位數房間代碼！';
         joinStatus.className = 'text-xs text-center text-red-400';
         return;
@@ -234,12 +251,18 @@ function connectToPeer() {
     joinStatus.innerText = '正在連線至房主房間...';
     joinStatus.className = 'text-xs text-center text-yellow-400';
     
-    if(peer) peer.destroy();
-    peer = new Peer({ debug: 1 });
+    if(peer) { peer.destroy(); }
+    
+    peer = new Peer({
+        host: '0.peerjs.com',
+        port: 443,
+        secure: true,
+        debug: 1
+    });
     
     peer.on('open', (id) => {
         myPeerId = id;
-        const targetFullId = 'bagel-mp-' + codeInput;
+        const targetFullId = 'bagel-v2-' + codeInput;
         hostConn = peer.connect(targetFullId);
         
         hostConn.on('open', () => {
@@ -262,7 +285,7 @@ function connectToPeer() {
     peer.on('error', (err) => {
         console.error('Connect Error:', err);
         updateStatus('連線失敗');
-        joinStatus.innerText = '找不到該房間，請核對代碼！';
+        joinStatus.innerText = '找不到該房間，請核對 4 位代碼！';
         joinStatus.className = 'text-xs text-center text-red-400';
     });
 }
@@ -356,7 +379,6 @@ function handleClientData(data) {
 
 function startMatch() {
     if(!isHost) return;
-    // 重置所有玩家分數
     for(let id in players) {
         players[id].score = 0;
     }
@@ -474,7 +496,6 @@ function handlePlayerAction(senderId, time, isEarly) {
         }
         broadcast({ type: 'ROUND_RESULT', message: `⚠️ ${pName} 偷跑犯規被扣分！` });
     } else {
-        // 第一個按下的玩家得分，並直接進入下一回合結算
         if(players[senderId]) {
             players[senderId].score += 1;
         }
@@ -485,15 +506,4 @@ function handlePlayerAction(senderId, time, isEarly) {
             nextRound();
         }, 3000);
     }
-    broadcastPlayersList();
-}
-
-function updateScoreboardUI() {
-    const container = document.getElementById('scoreboardContainer');
-    container.innerHTML = '';
-    
-    for(let id in players) {
-        const p = players[id];
-        const isMe = (id === myPeerId);
-        const div = document.createElement('div');
-        div.className = `flex justify-between items-center px-3 py-2 rounded-xl bg-neutral-800 border ${isMe ? 'border-yello
+    bro
