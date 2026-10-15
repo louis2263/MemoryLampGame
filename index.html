@@ -5,9 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>方包包 燈號對決 Multiplayer</title>
-<!-- 載入 PeerJS -->
 <script src="https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js"></script>
-<!-- 載入 Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700;900&display=swap');
@@ -20,7 +18,7 @@ body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-d
 
 <!-- 頂部列 -->
 <div class="w-full max-w-md flex justify-between items-center mb-4">
-    <div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v2.1 穩定多人版</div>
+    <div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v2.2 穩定多人版</div>
     <h1 class="text-xl font-black text-center m-0"><span class="bg-gradient-to-r from-yellow-300 to-emerald-400 bg-clip-text text-transparent">方包包 燈號對決</span></h1>
     <div id="connectionStatus" class="text-xs px-2 py-1 bg-red-900/65 text-red-300 border border-red-700 rounded-full">未連線</div>
 </div>
@@ -122,10 +120,9 @@ let peer = null;
 let isHost = false;
 let myName = '方包包玩家';
 let myPeerId = '';
-let connections = {}; // 房主記錄所有客戶端連線 {peerId: conn}
-let hostConn = null;  // 客戶端記錄與房主的連線
-
-let players = {}; // 記錄所有玩家名稱與分數 {peerId: {name, score}}
+let connections = {};
+let hostConn = null;
+let players = {};
 
 let gameState = {
     status: 'IDLE',
@@ -156,7 +153,6 @@ function updateStatus(text, type='error') {
     }
 }
 
-// 產生 4 位數隨機房號
 function generateRoomCode() {
     return Math.floor(1000 + Math.random() * 9000).toString();
 }
@@ -168,11 +164,10 @@ function hostGame() {
     updateStatus('建立中...', 'warning');
     
     const code = generateRoomCode();
-    myPeerId = 'bagel-v2-' + code;
+    myPeerId = 'bagel-v22-' + code;
     
     if(peer) { peer.destroy(); }
     
-    // 使用穩定嘅 PeerJS 設定
     peer = new Peer(myPeerId, {
         host: '0.peerjs.com',
         port: 443,
@@ -191,7 +186,6 @@ function hostGame() {
     peer.on('connection', (conn) => {
         conn.on('open', () => {
             connections[conn.peer] = conn;
-            // 立即發送現有玩家清單
             conn.send({ type: 'UPDATE_PLAYERS', players: players });
         });
 
@@ -210,7 +204,7 @@ function hostGame() {
     peer.on('error', (err) => {
         console.error('Peer Error:', err);
         if(err.type === 'unavailable-id') {
-            hostGame(); // 房號重複則重試
+            hostGame();
         } else {
             updateStatus('建立失敗，請重試');
         }
@@ -262,7 +256,7 @@ function connectToPeer() {
     
     peer.on('open', (id) => {
         myPeerId = id;
-        const targetFullId = 'bagel-v2-' + codeInput;
+        const targetFullId = 'bagel-v22-' + codeInput;
         hostConn = peer.connect(targetFullId);
         
         hostConn.on('open', () => {
@@ -344,7 +338,6 @@ function updatePlayersListUI() {
     }
 }
 
-// 房主接收客戶端數據
 function handleServerData(senderId, data) {
     switch(data.type) {
         case 'JOIN_ROOM':
@@ -358,7 +351,6 @@ function handleServerData(senderId, data) {
     }
 }
 
-// 客戶端接收房主數據
 function handleClientData(data) {
     switch(data.type) {
         case 'UPDATE_PLAYERS':
@@ -485,7 +477,6 @@ function playerAction() {
     }
 }
 
-// 房主處理來自任何客戶端的搶答
 function handlePlayerAction(senderId, time, isEarly) {
     if(!isHost) return;
     
@@ -506,4 +497,13 @@ function handlePlayerAction(senderId, time, isEarly) {
             nextRound();
         }, 3000);
     }
-    bro
+    broadcastPlayersList();
+}
+
+function updateScoreboardUI() {
+    const container = document.getElementById('scoreboardContainer');
+    container.innerHTML = '';
+    
+    for(let id in players) {
+        const p = players[id];
+        const isMe = (id =
