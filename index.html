@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -12,373 +13,450 @@
 body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:30px}
 </style>
 </head>
-​<body class="p-4 flex flex-col items-center select-none">
-​<div class="w-full max-w-md flex justify-between items-center mb-4">
-<div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v1.1 P2P</div>
-<h1 class="text-xl font-black text-center m-0"><span class="bg-gradient-to-r from-yellow-300 to-emerald-400 bg-clip-text text-transparent">方包包 燈號對決</span></h1>
-<div id="connectionStatus" class="text-xs px-2 py-1 bg-red-900/60 text-red-300 border border-red-700 rounded-full">未連線</div>
+
+<body class="p-4 flex flex-col items-center select-none">
+
+<div class="w-full max-w-md flex justify-between items-center mb-4">
+    <div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v1.2 P2P 穩定版</div>
+    <h1 class="text-xl font-black text-center m-0"><span class="bg-gradient-to-r from-yellow-300 to-emerald-400 bg-clip-text text-transparent">方包包 燈號對決</span></h1>
+    <div id="connectionStatus" class="text-xs px-2 py-1 bg-red-900/60 text-red-300 border border-red-700 rounded-full">未連線</div>
 </div>
-​<div id="lobbyScreen" class="w-full max-w-md flex flex-col gap-4">
-<div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
-<h2 class="text-base font-bold text-yellow-200">🎮 遊戲大廳 / 聯機設定</h2>
-<div>
-<label class="text-xs text-neutral-400 mb-1 block">您的玩家暱稱：</label>
-<input type="text" id="playerNameInput" value="方包包玩家" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-bold">
+
+<!-- 遊戲大廳畫面 -->
+<div id="lobbyScreen" class="w-full max-w-md flex flex-col gap-4">
+    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
+        <h2 class="text-base font-bold text-yellow-200">🎮 遊戲大廳 / 聯機設定</h2>
+        <div>
+            <label class="text-xs text-neutral-400 mb-1 block">您的玩家暱稱：</label>
+            <input type="text" id="playerNameInput" value="方包包玩家" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-bold">
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3 mt-2">
+            <button onclick="hostGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-90 active:scale-95 transition text-black font-black py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-lg">👑 建立房間</span>
+                <span class="text-[10px] opacity-80 mt-0.5">做 Host 讓朋友加入</span>
+            </button>
+            <button onclick="showJoinModal()" class="bg-gradient-to-r from-yellow-400 to-amber-500 hover:opacity-90 active:scale-95 transition text-black font-black py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-lg">🚪 加入房間</span>
+                <span class="text-[10px] opacity-80 mt-0.5">輸入代碼連線</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl">
+        <h3 class="text-sm font-bold text-neutral-300 mb-2">💡 玩法說明</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+            這是一款反應與燈號對決遊戲！當中央燈號轉為<b>綠燈</b>時，請以最快速度按下你的搶答按鈕。紅燈偷跑會被罰扣分！支援點對點 (P2P) 聯機對戰。
+        </p>
+    </div>
 </div>
-​<div class="grid grid-cols-2 gap-3 mt-2">
-<button onclick="hostGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-90 active:scale-95 transition text-black font-black py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center cursor-pointer">
-<span class="text-lg">👑 建立房間</span>
-<span class="text-[10px] opacity-80 mt-0.5">做 Host 讓朋友加入</span>
-</button>
-<button onclick="showJoinModal()" class="bg-gradient-to-r from-yellow-400 to-amber-500 hover:opacity-90 active:scale-95 transition text-black font-black py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center cursor-pointer">
-<span class="text-lg">🚪 加入房間</span>
-<span class="text-[10px] opacity-80 mt-0.5">輸入代碼連線</span>
-</button>
+
+<!-- 房主等候畫面 -->
+<div id="hostScreen" class="w-full max-w-md hidden flex-col gap-4">
+    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl text-center flex flex-col gap-3">
+        <h2 class="text-base font-bold text-emerald-400">👑 房間已建立</h2>
+        <p class="text-xs text-neutral-400">請將以下 4 位數房間代碼分享給對手：</p>
+        <div class="bg-neutral-800 border border-neutral-700 py-3 px-4 rounded-xl flex items-center justify-between">
+            <span id="roomCodeDisplay" class="text-2xl font-mono font-black text-yellow-300 tracking-widest">----</span>
+            <button onclick="copyRoomCode()" class="bg-neutral-700 hover:bg-neutral-600 text-xs px-3 py-2 rounded-lg font-bold cursor-pointer">複製代碼</button>
+        </div>
+        <div id="peerListStatus" class="text-xs text-yellow-400 mt-1 animate-pulse">正在連接伺服器中...</div>
+        <button id="startMatchBtn" onclick="startMatch()" disabled class="mt-2 w-full bg-neutral-800 text-neutral-500 font-black py-3 rounded-xl transition cursor-not-allowed">開始對決</button>
+        <button onclick="backToLobby()" class="mt-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs py-2 rounded-xl cursor-pointer">返回大廳</button>
+    </div>
 </div>
+
+<!-- 加入房間畫面 -->
+<div id="joinScreen" class="w-full max-w-md hidden flex-col gap-4">
+    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
+        <h2 class="text-base font-bold text-yellow-300">🚪 加入對手房間</h2>
+        <div>
+            <label class="text-xs text-neutral-400 mb-1 block">輸入對方的 4 位數房間代碼：</label>
+            <input type="text" id="targetPeerIdInput" placeholder="例如: 4829" maxlength="6" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-mono text-xl tracking-widest text-center">
+        </div>
+        <div id="joinStatusText" class="text-xs text-center text-neutral-400 min-h-[16px]"></div>
+        <div class="flex gap-2">
+            <button onclick="connectToPeer()" class="flex-1 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-black py-3 rounded-xl cursor-pointer">連線</button>
+            <button onclick="backToLobby()" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold py-3 px-5 rounded-xl cursor-pointer">返回</button>
+        </div>
+    </div>
 </div>
-​<div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl">
-<h3 class="text-sm font-bold text-neutral-300 mb-2">💡 玩法說明</h3>
-<p class="text-xs text-neutral-400 leading-relaxed">
-這是一款反應與燈號對決遊戲！當中央燈號轉為<b>綠燈</b>時，請以最快速度按下你的搶答按鈕。紅燈偷跑會被罰扣分！支援點對點 (P2P) 聯機對戰。
-</p>
+
+<!-- 遊戲對戰畫面 -->
+<div id="gameScreen" class="w-full max-w-md hidden flex-col gap-4">
+    <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl shadow-xl flex justify-between items-center">
+        <div class="text-center flex-1">
+            <div id="p1NameLabel" class="text-xs font-bold text-emerald-400">玩家 1</div>
+            <div id="p1Score" class="text-2xl font-black text-white">0</div>
+        </div>
+        <div class="text-neutral-600 font-black text-xl px-2">VS</div>
+        <div class="text-center flex-1">
+            <div id="p2NameLabel" class="text-xs font-bold text-yellow-400">玩家 2</div>
+            <div id="p2Score" class="text-2xl font-black text-white">0</div>
+        </div>
+    </div>
+
+    <!-- 燈號箱 -->
+    <div id="lightBox" class="bg-neutral-900 border-2 border-neutral-800 h-56 rounded-3xl flex flex-col items-center justify-center shadow-inner transition-all duration-300">
+        <div id="lightBulb" class="w-28 h-28 rounded-full bg-neutral-800 border-4 border-neutral-700 shadow-lg flex items-center justify-center transition-all duration-200">
+            <span id="lightText" class="text-xs font-black text-neutral-400">準備中</span>
+        </div>
+        <div id="instructionText" class="mt-4 text-sm font-bold text-neutral-400 text-center px-4">等待回合開始...</div>
+    </div>
+
+    <!-- 搶答按鈕 -->
+    <button id="actionBtn" onclick="playerAction()" disabled class="w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl transition active:scale-95 cursor-not-allowed">
+        燈未亮，切勿按！
+    </button>
+    <button onclick="backToLobby()" class="w-full bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 text-xs py-3 rounded-xl cursor-pointer mt-2">離開房間 / 重新連線</button>
 </div>
-</div>
-​<div id="hostScreen" class="w-full max-w-md hidden flex-col gap-4">
-<div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl text-center flex flex-col gap-3">
-<h2 class="text-base font-bold text-emerald-400">👑 房間已建立</h2>
-<p class="text-xs text-neutral-400">請將以下 6 位數房間代碼分享給對手：</p>
-<div class="bg-neutral-800 border border-neutral-700 py-3 px-4 rounded-xl flex items-center justify-between">
-<span id="roomCodeDisplay" class="text-xl font-mono font-black text-yellow-300 tracking-widest">------</span>
-<button onclick="copyRoomCode()" class="bg-neutral-700 hover:bg-neutral-600 text-xs px-3 py-1.5 rounded-lg font-bold cursor-pointer">複製代碼</button>
-</div>
-<div id="peerListStatus" class="text-xs text-yellow-400 mt-1 animate-pulse">等待對手加入中...</div>
-<button id="startMatchBtn" onclick="startMatch()" disabled class="mt-2 w-full bg-neutral-800 text-neutral-500 font-black py-3 rounded-xl transition cursor-not-allowed">開始對決</button>
-<button onclick="backToLobby()" class="mt-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs py-2 rounded-xl cursor-pointer">返回大廳</button>
-</div>
-</div>
-​<div id="joinScreen" class="w-full max-w-md hidden flex-col gap-4">
-<div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
-<h2 class="text-base font-bold text-yellow-300">🚪 加入對手房間</h2>
-<div>
-<label class="text-xs text-neutral-400 mb-1 block">輸入對方的 6 位數房間代碼：</label>
-<input type="text" id="targetPeerIdInput" placeholder="例如: 849201" maxlength="10" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-mono text-base tracking-widest text-center">
-</div>
-<div id="joinStatusText" class="text-xs text-center text-neutral-400 min-h-[16px]"></div>
-<div class="flex gap-2">
-<button onclick="connectToPeer()" class="flex-1 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-black py-3 rounded-xl cursor-pointer">連線</button>
-<button onclick="backToLobby()" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold py-3 px-5 rounded-xl cursor-pointer">返回</button>
-</div>
-</div>
-</div>
-​<div id="gameScreen" class="w-full max-w-md hidden flex-col gap-4">
-<div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl shadow-xl flex justify-between items-center">
-<div class="text-center flex-1">
-<div id="p1NameLabel" class="text-xs font-bold text-emerald-400">玩家 1</div>
-<div id="p1Score" class="text-2xl font-black text-white">0</div>
-</div>
-<div class="text-neutral-600 font-black text-xl px-2">VS</div>
-<div class="text-center flex-1">
-<div id="p2NameLabel" class="text-xs font-bold text-yellow-400">玩家 2</div>
-<div id="p2Score" class="text-2xl font-black text-white">0</div>
-</div>
-</div>
-​<!-- Light bulb / signal box -->
-<div id="lightBox" class="bg-neutral-900 border-2 border-neutral-800 h-56 rounded-3xl flex flex-col items-center justify-center shadow-inner transition-all duration-300">
-<div id="lightBulb" class="w-28 h-28 rounded-full bg-neutral-800 border-4 border-neutral-700 shadow-lg flex items-center justify-center transition-all duration-200">
-<span id="lightText" class="text-xs font-black text-neutral-400">準備中</span>
-</div>
-<div id="instructionText" class="mt-4 text-sm font-bold text-neutral-400 text-center px-4">等待回合開始...</div>
-</div>
-​<!-- Action button -->
-<button id="actionBtn" onclick="playerAction()" disabled class="w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl transition active:scale-95 cursor-not-allowed">
-燈未亮，切勿按！
-</button>
-<button onclick="backToLobby()" class="w-full bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 text-xs py-3 rounded-xl cursor-pointer mt-2">離開房間 / 重新連線</button>
-</div>
-​<script>
+
+<script>
 let peer = null;
 let conn = null;
-let myPeerId = '';
 let isHost = false;
 let myName = '方包包玩家';
 let opponentName = '對手';
-​let gameState = {
-p1Score: 0,
-p2Score: 0,
-status: 'IDLE',
-lightState: 'RED',
-startTime: 0,
-timeoutId: null
+
+let gameState = {
+    p1Score: 0,
+    p2Score: 0,
+    status: 'IDLE', 
+    lightState: 'RED', 
+    startTime: 0,
+    timeoutId: null
 };
-​function showScreen(screenId) {
-['lobbyScreen', 'hostScreen', 'joinScreen', 'gameScreen'].forEach(id => {
-document.getElementById(id).classList.add('hidden');
-document.getElementById(id).classList.remove('flex');
-});
-const target = document.getElementById(screenId);
-target.classList.remove('hidden');
-target.classList.add('flex');
+
+function showScreen(screenId) {
+    ['lobbyScreen', 'hostScreen', 'joinScreen', 'gameScreen'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.remove('flex');
+    });
+    const target = document.getElementById(screenId);
+    target.classList.remove('hidden');
+    target.classList.add('flex');
 }
-​function updateStatus(text, type='error') {
-const statusEl = document.getElementById('connectionStatus');
-statusEl.innerText = text;
-if(type === 'success') {
-statusEl.className = 'text-xs px-2 py-1 bg-emerald-900/65 text-emerald-300 border border-emerald-700 rounded-full';
-} else if(type === 'warning') {
-statusEl.className = 'text-xs px-2 py-1 bg-yellow-900/65 text-yellow-300 border border-yellow-700 rounded-full';
-} else {
-statusEl.className = 'text-xs px-2 py-1 bg-red-900/65 text-red-300 border border-red-700 rounded-full';
+
+function updateStatus(text, type='error') {
+    const statusEl = document.getElementById('connectionStatus');
+    statusEl.innerText = text;
+    if(type === 'success') {
+        statusEl.className = 'text-xs px-2 py-1 bg-emerald-900/65 text-emerald-300 border border-emerald-700 rounded-full';
+    } else if(type === 'warning') {
+        statusEl.className = 'text-xs px-2 py-1 bg-yellow-900/65 text-yellow-300 border border-yellow-700 rounded-full';
+    } else {
+        statusEl.className = 'text-xs px-2 py-1 bg-red-900/65 text-red-300 border border-red-700 rounded-full';
+    }
 }
-}
-​// 產生隨機 6 位數字房號，確保容易輸入且極少碰撞
+
+// 產生 4 位數簡單房號
 function generateRoomCode() {
-return Math.floor(100000 + Math.random() * 900000).toString();
+    return Math.floor(1000 + Math.random() * 9000).toString();
 }
-​function hostGame() {
-myName = document.getElementById('playerNameInput').value.trim() || '方包包玩家';
-isHost = true;
-updateStatus('建立中...', 'warning');
-​const code = generateRoomCode();
-// 使用自訂短 ID
-peer = new Peer('bagel-light-' + code);
-​peer.on('open', (id) => {
-myPeerId = id;
-document.getElementById('roomCodeDisplay').innerText = code;
-showScreen('hostScreen');
-updateStatus('房間已就緒', 'warning');
-});
-​peer.on('connection', (c) => {
-if(conn && conn.open) {
-c.close();
-return;
+
+// 建立 Peer 物件（使用更穩定的公開 PeerJS 設定）
+function createPeerInstance(customId = undefined) {
+    // 使用預設公共伺服器，但加上 debug
+    if (customId) {
+        return new Peer(customId, {
+            debug: 2
+        });
+    } else {
+        return new Peer({
+            debug: 2
+        });
+    }
 }
-conn = c;
-setupConnection();
-});
-​peer.on('error', (err) => {
-console.error(err);
-// 如果 ID 撞咗或者伺服器忙碌，試下再生成一次
-if(err.type === 'unavailable-id') {
-hostGame();
-} else {
-updateStatus('建立房間失敗');
+
+function hostGame() {
+    myName = document.getElementById('playerNameInput').value.trim() || '方包包玩家';
+    isHost = true;
+    updateStatus('建立中...', 'warning');
+    
+    const code = generateRoomCode();
+    const peerId = 'bagel-' + code;
+    
+    if(peer) peer.destroy();
+    peer = createPeerInstance(peerId);
+
+    peer.on('open', (id) => {
+        document.getElementById('roomCodeDisplay').innerText = code;
+        document.getElementById('peerListStatus').innerText = '房間已就緒，等待對手加入...';
+        showScreen('hostScreen');
+        updateStatus('房間已就緒', 'warning');
+    });
+
+    peer.on('connection', (c) => {
+        if(conn && conn.open) {
+            c.close();
+            return;
+        }
+        conn = c;
+        setupConnection();
+    });
+
+    peer.on('error', (err) => {
+        console.error('PeerJS Error:', err);
+        if(err.type === 'unavailable-id') {
+            // 如果 ID 碰撞重試
+            hostGame();
+        } else {
+            updateStatus('連線伺服器失敗');
+            document.getElementById('peerListStatus').innerText = '建立房間失敗：請檢查網絡或重新整理';
+        }
+    });
 }
-});
+
+function showJoinModal() {
+    isHost = false;
+    showScreen('joinScreen');
 }
-​function showJoinModal() {
-isHost = false;
-showScreen('joinScreen');
+
+function backToLobby() {
+    if(peer) {
+        peer.destroy();
+        peer = null;
+    }
+    conn = null;
+    isHost = false;
+    updateStatus('未連線', 'error');
+    showScreen('lobbyScreen');
 }
-​function backToLobby() {
-if(peer) {
-peer.destroy();
-peer = null;
+
+function connectToPeer() {
+    const codeInput = document.getElementById('targetPeerIdInput').value.trim();
+    const joinStatus = document.getElementById('joinStatusText');
+    
+    if(!codeInput || codeInput.length < 4) {
+        joinStatus.innerText = '請輸入正確的 4 位數房間代碼！';
+        joinStatus.className = 'text-xs text-center text-red-400';
+        return;
+    }
+    
+    myName = document.getElementById('playerNameInput').value.trim() || '方包包玩家';
+    updateStatus('連線中...', 'warning');
+    joinStatus.innerText = '正在連線至房主...';
+    joinStatus.className = 'text-xs text-center text-yellow-400';
+    
+    if(peer) peer.destroy();
+    
+    peer = createPeerInstance();
+    
+    peer.on('open', () => {
+        const targetFullId = 'bagel-' + codeInput;
+        conn = peer.connect(targetFullId);
+        setupConnection();
+    });
+    
+    peer.on('error', (err) => {
+        console.error('Connect Error:', err);
+        updateStatus('連線失敗');
+        joinStatus.innerText = '找不到該房間，請核對代碼或確認房主在線！';
+        joinStatus.className = 'text-xs text-center text-red-400';
+    });
 }
-conn = null;
-isHost = false;
-updateStatus('未連線', 'error');
-showScreen('lobbyScreen');
+
+function setupConnection() {
+    conn.on('open', () => {
+        updateStatus('已連線', 'success');
+        conn.send({ type: 'HANDSHAKE', name: myName });
+    });
+
+    conn.on('data', (data) => {
+        handleIncomingData(data);
+    });
+
+    conn.on('close', () => {
+        updateStatus('對手已斷線', 'error');
+        alert('對手已離開房間！');
+        backToLobby();
+    });
 }
-​function connectToPeer() {
-const codeInput = document.getElementById('targetPeerIdInput').value.trim();
-const joinStatus = document.getElementById('joinStatusText');
-​if(!codeInput || codeInput.length < 4) {
-joinStatus.innerText = '請輸入正確的房間代碼！';
-joinStatus.className = 'text-xs text-center text-red-400';
-return;
+
+function copyRoomCode() {
+    const code = document.getElementById('roomCodeDisplay').innerText;
+    if(navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+            alert('已複製房號代碼：' + code);
+        });
+    } else {
+        const tempInput = document.createElement('input');
+        tempInput.value = code;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        alert('已複製房號代碼：' + code);
+    }
 }
-​myName = document.getElementById('playerNameInput').value.trim() || '方包包玩家';
-updateStatus('連線中...', 'warning');
-joinStatus.innerText = '正在尋找並連線至對手房號...';
-joinStatus.className = 'text-xs text-center text-yellow-400';
-​if(peer) peer.destroy();
-​peer = new Peer();
-​peer.on('open', () => {
-const targetFullId = 'bagel-light-' + codeInput;
-conn = peer.connect(targetFullId);
-setupConnection();
-});
-​peer.on('error', (err) => {
-console.error(err);
-updateStatus('連線失敗');
-joinStatus.innerText = '找不到該房間或連線逾時，請檢查代碼！';
-joinStatus.className = 'text-xs text-center text-red-400';
-});
+
+function handleIncomingData(data) {
+    switch(data.type) {
+        case 'HANDSHAKE':
+            opponentName = data.name;
+            if(isHost) {
+                document.getElementById('peerListStatus').innerText = `已連接對手：${opponentName}`;
+                const startBtn = document.getElementById('startMatchBtn');
+                startBtn.disabled = false;
+                startBtn.className = 'mt-2 w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-black font-black py-3 rounded-xl shadow-lg hover:opacity-95 active:scale-95 transition cursor-pointer';
+            }
+            showScreen('gameScreen');
+            updateUIRoles();
+            break;
+        case 'START_ROUND':
+            triggerRedLightPhase();
+            break;
+        case 'LIGHT_GREEN':
+            triggerGreenLightPhase(data.startTime);
+            break;
+        case 'PLAYER_ACTION':
+            handleOpponentAction(data.time, data.isEarly);
+            break;
+        case 'UPDATE_SCORE':
+            gameState.p1Score = data.p1Score;
+            gameState.p2Score = data.p2Score;
+            updateScoreUI();
+            break;
+    }
 }
-​function setupConnection() {
-conn.on('open', () => {
-updateStatus('已連線', 'success');
-conn.send({ type: 'HANDSHAKE', name: myName });
-});
-​conn.on('data', (data) => {
-handleIncomingData(data);
-});
-​conn.on('close', () => {
-updateStatus('對手已斷線', 'error');
-backToLobby();
-});
+
+function updateUIRoles() {
+    if(isHost) {
+        document.getElementById('p1NameLabel').innerText = `${myName} (你)`;
+        document.getElementById('p2NameLabel').innerText = opponentName;
+    } else {
+        document.getElementById('p1NameLabel').innerText = opponentName;
+        document.getElementById('p2NameLabel').innerText = `${myName} (你)`;
+    }
+    updateScoreUI();
 }
-​function copyRoomCode() {
-const code = document.getElementById('roomCodeDisplay').innerText;
-if(navigator.clipboard && navigator.clipboard.writeText) {
-navigator.clipboard.writeText(code).then(() => {
-alert('已複製房號代碼：' + code);
-});
-} else {
-const tempInput = document.createElement('input');
-tempInput.value = code;
-document.body.appendChild(tempInput);
-tempInput.select();
-document.execCommand('copy');
-document.body.removeChild(tempInput);
-alert('已複製房號代碼：' + code);
+
+function updateScoreUI() {
+    document.getElementById('p1Score').innerText = gameState.p1Score;
+    document.getElementById('p2Score').innerText = gameState.p2Score;
 }
+
+function startMatch() {
+    if(!isHost) return;
+    gameState.p1Score = 0;
+    gameState.p2Score = 0;
+    broadcast({ type: 'UPDATE_SCORE', p1Score: 0, p2Score: 0 });
+    nextRound();
 }
-​function handleIncomingData(data) {
-switch(data.type) {
-case 'HANDSHAKE':
-opponentName = data.name;
-if(isHost) {
-document.getElementById('peerListStatus').innerText = 已連接對手：${opponentName};
-const startBtn = document.getElementById('startMatchBtn');
-startBtn.disabled = false;
-startBtn.className = 'mt-2 w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-black font-black py-3 rounded-xl shadow-lg hover:opacity-95 active:scale-95 transition cursor-pointer';
+
+function broadcast(data) {
+    if(conn && conn.open) {
+        conn.send(data);
+    }
 }
-showScreen('gameScreen');
-updateUIRoles();
-break;
-case 'START_ROUND':
-triggerRedLightPhase();
-break;
-case 'LIGHT_GREEN':
-triggerGreenLightPhase(data.startTime);
-break;
-case 'PLAYER_ACTION':
-handleOpponentAction(data.time, data.isEarly);
-break;
-case 'UPDATE_SCORE':
-gameState.p1Score = data.p1Score;
-gameState.p2Score = data.p2Score;
-updateScoreUI();
-break;
+
+function nextRound() {
+    if(!isHost) return;
+    broadcast({ type: 'START_ROUND' });
+    triggerRedLightPhase();
 }
+
+function triggerRedLightPhase() {
+    gameState.lightState = 'RED';
+    gameState.status = 'WAITING';
+    
+    const bulb = document.getElementById('lightBulb');
+    const text = document.getElementById('lightText');
+    const inst = document.getElementById('instructionText');
+    const btn = document.getElementById('actionBtn');
+
+    bulb.className = 'w-28 h-28 rounded-full bg-red-600 border-4 border-red-500 shadow-lg shadow-red-900/50 flex items-center justify-center transition-all duration-200 animate-pulse';
+    text.innerText = '紅燈';
+    text.className = 'text-xs font-black text-white';
+    inst.innerText = '燈號正紅，請勿按！等待綠燈亮起...';
+    
+    btn.disabled = false;
+    btn.className = 'w-full py-6 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 text-white text-xl font-black shadow-2xl hover:opacity-95 active:scale-95 transition cursor-pointer';
+    btn.innerText = ' 點擊搶答 / 偷跑測試 ';
+
+    if(isHost) {
+        const randomDelay = Math.floor(Math.random() * 3000) + 2000;
+        gameState.timeoutId = setTimeout(() => {
+            const startTime = Date.now();
+            gameState.startTime = startTime;
+            broadcast({ type: 'LIGHT_GREEN', startTime: startTime });
+            triggerGreenLightPhase(startTime);
+        }, randomDelay);
+    }
 }
-​function updateUIRoles() {
-if(isHost) {
-document.getElementById('p1NameLabel').innerText = ${myName} (你);
-document.getElementById('p2NameLabel').innerText = opponentName;
-} else {
-document.getElementById('p1NameLabel').innerText = opponentName;
-document.getElementById('p2NameLabel').innerText = ${myName} (你);
+
+function triggerGreenLightPhase(startTime) {
+    gameState.lightState = 'GREEN';
+    gameState.status = 'READY';
+    gameState.startTime = startTime;
+
+    const bulb = document.getElementById('lightBulb');
+    const text = document.getElementById('lightText');
+    const inst = document.getElementById('instructionText');
+    const btn = document.getElementById('actionBtn');
+
+    bulb.className = 'w-28 h-28 rounded-full bg-emerald-500 border-4 border-emerald-400 shadow-lg shadow-emerald-900/50 flex items-center justify-center transition-all duration-200 animate-bounce';
+    text.innerText = '綠燈！';
+    text.className = 'text-xs font-black text-black';
+    inst.innerText = '🟢 綠燈亮起！立刻按下！';
+    
+    btn.className = 'w-full py-6 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-black text-xl font-black shadow-2xl hover:opacity-95 active:scale-95 transition cursor-pointer';
+    btn.innerText = ' ⚡ 立即按下！ ';
 }
-updateScoreUI();
+
+function playerAction() {
+    const now = Date.now();
+    const btn = document.getElementById('actionBtn');
+    btn.disabled = true;
+
+    if(gameState.lightState === 'RED') {
+        document.getElementById('instructionText').innerText = '❌ 偷跑犯規！扣一分！';
+        btn.className = 'w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl cursor-not-allowed';
+        btn.innerText = '犯規被罰';
+
+        if(isHost) {
+            clearTimeout(gameState.timeoutId);
+            gameState.p1Score = Math.max(0, gameState.p1Score - 1);
+            broadcast({ type: 'UPDATE_SCORE', p1Score: gameState.p1Score, p2Score: gameState.p2Score });
+            updateScoreUI();
+            setTimeout(nextRound, 2000);
+        } else {
+            conn.send({ type: 'PLAYER_ACTION', time: now, isEarly: true });
+        }
+    } else if(gameState.lightState === 'GREEN') {
+        const reactionTime = now - gameState.startTime;
+        document.getElementById('instructionText').innerText = `⚡ 反應時間：${reactionTime} ms`;
+        btn.className = 'w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl cursor-not-allowed';
+        btn.innerText = `${reactionTime} ms`;
+
+        if(isHost) {
+            gameState.p1Score += 1;
+            broadcast({ type: 'UPDATE_SCORE', p1Score: gameState.p1Score, p2Score: gameState.p2Score });
+            updateScoreUI();
+            document.getElementById('instructionText').innerText = `🎉 你贏得本回合！反應：${reactionTime} ms`;
+            setTimeout(nextRound, 2500);
+        } else {
+            conn.send({ type: 'PLAYER_ACTION', time: reactionTime, isEarly: false });
+        }
+    }
 }
-​function updateScoreUI() {
-document.getElementById('p1Score').innerText = gameState.p1Score;
-document.getElementById('p2Score').innerText = gameState.p2Score;
-}
-​function startMatch() {
-if(!isHost) return;
-gameState.p1Score = 0;
-gameState.p2Score = 0;
-broadcast({ type: 'UPDATE_SCORE', p1Score: 0, p2Score: 0 });
-nextRound();
-}
-​function broadcast(data) {
-if(conn && conn.open) {
-conn.send(data);
-}
-}
-​function nextRound() {
-if(!isHost) return;
-broadcast({ type: 'START_ROUND' });
-triggerRedLightPhase();
-}
-​function triggerRedLightPhase() {
-gameState.lightState = 'RED';
-gameState.status = 'WAITING';
-​const bulb = document.getElementById('lightBulb');
-const text = document.getElementById('lightText');
-const inst = document.getElementById('instructionText');
-const btn = document.getElementById('actionBtn');
-​bulb.className = 'w-28 h-28 rounded-full bg-red-600 border-4 border-red-500 shadow-lg shadow-red-900/50 flex items-center justify-center transition-all duration-200 animate-pulse';
-text.innerText = '紅燈';
-text.className = 'text-xs font-black text-white';
-inst.innerText = '燈號正紅，請勿按！等待綠燈亮起...';
-​btn.disabled = false;
-btn.className = 'w-full py-6 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 text-white text-xl font-black shadow-2xl hover:opacity-95 active:scale-95 transition cursor-pointer';
-btn.innerText = ' 點擊搶答 / 偷跑測試 ';
-​if(isHost) {
-const randomDelay = Math.floor(Math.random() * 3000) + 2000;
-gameState.timeoutId = setTimeout(() => {
-const startTime = Date.now();
-gameState.startTime = startTime;
-broadcast({ type: 'LIGHT_GREEN', startTime: startTime });
-triggerGreenLightPhase(startTime);
-}, randomDelay);
-}
-}
-​function triggerGreenLightPhase(startTime) {
-gameState.lightState = 'GREEN';
-gameState.status = 'READY';
-gameState.startTime = startTime;
-​const bulb = document.getElementById('lightBulb');
-const text = document.getElementById('lightText');
-const inst = document.getElementById('instructionText');
-const btn = document.getElementById('actionBtn');
-​bulb.className = 'w-28 h-28 rounded-full bg-emerald-500 border-4 border-emerald-400 shadow-lg shadow-emerald-900/50 flex items-center justify-center transition-all duration-200 animate-bounce';
-text.innerText = '綠燈！';
-text.className = 'text-xs font-black text-black';
-inst.innerText = '🟢 綠燈亮起！立刻按下！';
-​btn.className = 'w-full py-6 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-black text-xl font-black shadow-2xl hover:opacity-95 active:scale-95 transition cursor-pointer';
-btn.innerText = ' ⚡ 立即按下！ ';
-}
-​function playerAction() {
-const now = Date.now();
-const btn = document.getElementById('actionBtn');
-btn.disabled = true;
-​if(gameState.lightState === 'RED') {
-document.getElementById('instructionText').innerText = '❌ 偷跑犯規！扣一分！';
-btn.className = 'w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl cursor-not-allowed';
-btn.innerText = '犯規被罰';
-​if(isHost) {
-clearTimeout(gameState.timeoutId);
-gameState.p1Score = Math.max(0, gameState.p1Score - 1);
-broadcast({ type: 'UPDATE_SCORE', p1Score: gameState.p1Score, p2Score: gameState.p2Score });
-updateScoreUI();
-setTimeout(nextRound, 2000);
-} else {
-conn.send({ type: 'PLAYER_ACTION', time: now, isEarly: true });
-}
-} else if(gameState.lightState === 'GREEN') {
-const reactionTime = now - gameState.startTime;
-document.getElementById('instructionText').innerText = ⚡ 反應時間：${reactionTime} ms;
-btn.className = 'w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl cursor-not-allowed';
-btn.innerText = ${reactionTime} ms;
-​if(isHost) {
-gameState.p1Score += 1;
-broadcast({ type: 'UPDATE_SCORE', p1Score: gameState.p1Score, p2Score: gameState.p2Score });
-updateScoreUI();
-document.getElementById('instructionText').innerText = 🎉 你贏得本回合！反應：${reactionTime} ms;
-setTimeout(nextRound, 2500);
-} else {
-conn.send({ type: 'PLAYER_ACTION', time: reactionTime, isEarly: false });
-}
-}
-}
-​function handleOpponentAction(time, isEarly) {
-if(!isHost) return;
-​if(isEarly) {
-gameState.p2Score = Math.max(0, gameState.p2Score - 1);
-document.getElementById('instructionText').innerText = ⚠️ 對手偷跑犯規！;
-} else {
-gameState.p2Score += 1;
-document.getElementById('instructionText').innerText = 😢 對手勝出本回合！反應：${time} ms;
-}
-​broadcast({ type: 'UPDATE_SCORE', p1Score: gameState.p1Score, p2Score: gameState.p2Score });
-updateScoreUI();
-setTimeout(nextRound, 2500);
+
+function handleOpponentAction(time, isEarly) {
+    if(!isHost) return;
+    
+    if(isEarly) {
+        gameState.p2Score = Math.max(0, gameState.p2Score - 1);
+        document.getElementById('instructionText').innerText = `⚠️ 對手偷跑犯規！`;
+    } else {
+        gameState.p2Score += 1;
+        document.getElementById('instructionText').innerText = `😢 對手勝出本回合！反應：${time} ms`;
+    }
+    
+    broadcast({ type: 'UPDATE_SCORE', p1Score: gameState.p1Score, p2Score: gameState.p2Score });
+    updateScoreUI();
+    setTimeout(nextRound, 2500);
 }
 </script>
 </body>
 </html>
+```
