@@ -1,509 +1,182 @@
-```html
-<!DOCTYPE html>
-<html lang="zh-HK">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>方包包 燈號對決 Multiplayer</title>
-<script src="https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>方包包 V12.1 固定房號</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700;900&display=swap');
-*{box-sizing:border-box;font-family:'Noto Sans HK',sans-serif;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:30px}
+body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;font-family:sans-serif;padding-bottom:30px}
+.ver{background:#FFEB00;color:#000;padding:4px 12px;border-radius:99px;font-weight:900;font-size:12px;position:fixed;top:8px;right:8px;z-index:20}
+h1{margin:50px 0 8px;color:#FFEB00;font-size:26px}
+.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:400px;margin:6px 0}
+.tab,.lvl{flex:1;padding:12px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:13px;text-align:center}
+.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
+.flash{color:#FFEB00;font-weight:900;font-size:20px;margin:12px 0;min-height:28px;text-align:center}
+#cd{font-size:90px;font-weight:900;color:#FFEB00;display:none;text-align:center;margin:10px}
+.light{width:92%;max-width:400px;height:86px;border-radius:20px;border:0;margin:7px 0;font-size:22px;font-weight:900;color:#fff}
+#l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835} #l3{background:#0055D0} #l4{background:#8A00C2}
+.light.on{box-shadow:0 0 30px #fff;filter:brightness(1.6)}
+.btn{width:92%;max-width:400px;padding:16px;border-radius:99px;border:0;font-weight:900;font-size:17px;margin:6px 0}
+.btnY{background:#FFEB00;color:#000}.btnG{background:#333;color:#fff}
+.box{width:92%;max-width:400px;background:#121212;border:1px solid #444;border-radius:16px;padding:14px;margin-top:12px}
+.nameI{width:100%;padding:12px;border-radius:10px;border:2px solid #555;background:#000;color:#fff;font-size:15px;font-weight:700}
+.code{font-size:36px;font-weight:900;letter-spacing:8px;color:#00FF88;text-align:center;margin:8px 0}
+.row{display:flex;justify-content:space-between;background:#1a1a1a;padding:10px 12px;border-radius:10px;border:1px solid #222;margin-top:6px;font-size:13px}
+.row.me{border-color:#FFEB00;background:#2a2a00}
+.row.win{border-color:#FFEB00;background:linear-gradient(90deg,#FFEB0022,#00FF8822)}
+#joinLog{font-size:13px;text-align:center;margin-top:8px;padding:10px;border-radius:8px;background:#222;color:#FFEB00;white-space:pre-line;line-height:1.6}
 </style>
-</head>
+</head><body>
+<div class="ver">V12.1 固定房號</div>
+<h1>燈號對決</h1>
 
-<body class="p-4 flex flex-col items-center select-none">
-
-<!-- 頂部列 -->
-<div class="w-full max-w-md flex justify-between items-center mb-4">
-    <div class="text-xs font-bold text-yellow-300 bg-neutral-800 border border-neutral-700 px-3 py-1 rounded-full">v2.2 穩定多人版</div>
-    <h1 class="text-xl font-black text-center m-0"><span class="bg-gradient-to-r from-yellow-300 to-emerald-400 bg-clip-text text-transparent">方包包 燈號對決</span></h1>
-    <div id="connectionStatus" class="text-xs px-2 py-1 bg-red-900/65 text-red-300 border border-red-700 rounded-full">未連線</div>
+<div class="tabs">
+<div class="tab" id="tab-single" onclick="setTab('single')">單人</div>
+<div class="tab" id="tab-party" onclick="setTab('party')">本地多人</div>
+<div class="tab active" id="tab-room" onclick="setTab('room')">淘汰賽房間</div>
+</div>
+<div class="lvls">
+<div class="lvl active" id="lvl-3" onclick="setMode(3)">3盞</div>
+<div class="lvl" id="lvl-4" onclick="setMode(4)">4盞</div>
+<div class="lvl" id="lvl-5" onclick="setMode(5)">5盞</div>
 </div>
 
-<!-- 1. 大廳畫面 -->
-<div id="lobbyScreen" class="w-full max-w-md flex flex-col gap-4">
-    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
-        <h2 class="text-base font-bold text-yellow-200">🎮 遊戲大廳 / 多人連線</h2>
-        <div>
-            <label class="text-xs text-neutral-400 mb-1 block">您的玩家暱稱：</label>
-            <input type="text" id="playerNameInput" value="方包包玩家" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-bold">
-        </div>
-        
-        <div class="grid grid-cols-2 gap-3 mt-2">
-            <button onclick="hostGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-90 active:scale-95 transition text-black font-black py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center cursor-pointer">
-                <span class="text-lg">👑 建立多人房</span>
-                <span class="text-[10px] opacity-80 mt-0.5">做 Host 讓朋友加入</span>
-            </button>
-            <button onclick="showJoinModal()" class="bg-gradient-to-r from-yellow-400 to-amber-500 hover:opacity-90 active:scale-95 transition text-black font-black py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center cursor-pointer">
-                <span class="text-lg">🚪 加入房間</span>
-                <span class="text-[10px] opacity-80 mt-0.5">輸入代碼連線</span>
-            </button>
-        </div>
-    </div>
+<div style="display:flex;gap:6px;margin:8px 0"><div style="background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:99px;font-size:12px">關卡 <b id="level" style="color:#FFEB00">0</b></div><div style="background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:99px;font-size:12px">生存 <b id="alive" style="color:#FFEB00">1</b></div></div>
 
-    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl">
-        <h3 class="text-sm font-bold text-neutral-300 mb-2">💡 多人玩法說明</h3>
-        <p class="text-xs text-neutral-400 leading-relaxed">
-            支援多位玩家同時連線！房主建立房間後會獲得一個<b>4位數代碼</b>。朋友輸入該代碼即可加入房間。當中央燈號轉為<b>綠燈</b>時鬥快按下搶答！紅燈偷跑會被扣分！
-        </p>
-    </div>
-</div>
+<div class="flash" id="flash">V12.1 - 固定房號唔會失效</div>
+<div id="cd">3</div>
+<div id="time" style="color:#888;font-size:12px;min-height:16px"></div>
 
-<!-- 2. 房主等待室 -->
-<div id="hostScreen" class="w-full max-w-md hidden flex-col gap-4">
-    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl text-center flex flex-col gap-3">
-        <h2 class="text-base font-bold text-emerald-400">👑 多人房間已建立</h2>
-        <p class="text-xs text-neutral-400">請將以下 4 位數房間代碼分享給朋友：</p>
-        <div class="bg-neutral-800 border border-neutral-700 py-3 px-4 rounded-xl flex items-center justify-between">
-            <span id="roomCodeDisplay" class="text-3xl font-mono font-black text-yellow-300 tracking-widest">----</span>
-            <button onclick="copyRoomCode()" class="bg-neutral-700 hover:bg-neutral-600 text-xs px-3 py-2 rounded-lg font-bold cursor-pointer">複製代碼</button>
-        </div>
-        
-        <div class="text-left mt-2">
-            <div class="text-xs text-neutral-400 mb-1 font-bold">已連接的玩家：</div>
-            <div id="playersListContainer" class="bg-neutral-800/60 border border-neutral-700/60 rounded-xl p-3 max-h-32 overflow-y-auto flex flex-col gap-1.5 text-xs">
-                <div class="text-neutral-500">等待玩家加入中...</div>
-            </div>
-        </div>
+<button class="light" id="l0" onclick="press(0)">🔴 紅</button>
+<button class="light" id="l1" onclick="press(1)">🟡 黃</button>
+<button class="light" id="l2" onclick="press(2)">🟢 綠</button>
+<button class="light" id="l3" onclick="press(3)" style="display:none">🔵 藍</button>
+<button class="light" id="l4" onclick="press(4)" style="display:none">🟣 紫</button>
 
-        <button id="startMatchBtn" onclick="startMatch()" disabled class="mt-2 w-full bg-neutral-800 text-neutral-500 font-black py-3 rounded-xl transition cursor-not-allowed">開始對決</button>
-        <button onclick="backToLobby()" class="mt-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs py-2 rounded-xl cursor-pointer">返回大廳</button>
-    </div>
-</div>
+<div id="mainLB" style="width:92%;max-width:400px;margin-top:10px"></div>
 
-<!-- 3. 加入房間畫面 -->
-<div id="joinScreen" class="w-full max-w-md hidden flex-col gap-4">
-    <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl shadow-xl flex flex-col gap-4">
-        <h2 class="text-base font-bold text-yellow-300">🚪 加入多人房間</h2>
-        <div>
-            <label class="text-xs text-neutral-400 mb-1 block">輸入房主的 4 位數房間代碼：</label>
-            <input type="text" id="targetPeerIdInput" placeholder="例如: 4829" maxlength="4" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 font-mono text-2xl tracking-widest text-center">
-        </div>
-        <div id="joinStatusText" class="text-xs text-center text-neutral-400 min-h-[16px]"></div>
-        <div class="flex gap-2">
-            <button onclick="connectToPeer()" class="flex-1 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-black py-3 rounded-xl cursor-pointer">連線</button>
-            <button onclick="backToLobby()" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold py-3 px-5 rounded-xl cursor-pointer">返回</button>
-        </div>
-    </div>
-</div>
+<button class="btn btnY" onclick="startGame()">▶️ 開始</button>
+<button class="btn btnG" onclick="resetGame()">↻ 重置</button>
 
-<!-- 4. 遊戲主畫面 -->
-<div id="gameScreen" class="w-full max-w-md hidden flex-col gap-4">
-    <!-- 即時分數排行榜 -->
-    <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl shadow-xl">
-        <div class="text-xs font-bold text-neutral-400 mb-2 text-center">🏆 即時分數排行榜</div>
-        <div id="scoreboardContainer" class="flex flex-col gap-1.5 max-h-28 overflow-y-auto">
-            <!-- 動態插入各玩家分數 -->
-        </div>
-    </div>
-
-    <!-- 燈號箱 -->
-    <div id="lightBox" class="bg-neutral-900 border-2 border-neutral-800 h-56 rounded-3xl flex flex-col items-center justify-center shadow-inner transition-all duration-300">
-        <div id="lightBulb" class="w-28 h-28 rounded-full bg-neutral-800 border-4 border-neutral-700 shadow-lg flex items-center justify-center transition-all duration-200">
-            <span id="lightText" class="text-xs font-black text-neutral-400">準備中</span>
-        </div>
-        <div id="instructionText" class="mt-4 text-sm font-bold text-neutral-400 text-center px-4">等待房主開始回合...</div>
-    </div>
-
-    <!-- 搶答按鈕 -->
-    <button id="actionBtn" onclick="playerAction()" disabled class="w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl transition active:scale-95 cursor-not-allowed">
-        燈未亮，切勿按！
-    </button>
-    <button onclick="backToLobby()" class="w-full bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 text-xs py-3 rounded-xl cursor-pointer mt-2">離開房間 / 重新連線</button>
+<div class="box" id="roomBox">
+<div style="font-weight:900">💀 淘汰賽房間</div>
+<input id="nameInput" class="nameI" style="margin-top:10px" placeholder="你的名稱 必填 例如 Kennis" maxlength="10">
+<div style="display:flex;gap:6px;margin-top:10px"><button class="btn btnY" style="flex:1" onclick="createRoom()">開新房間</button><button class="btn btnG" style="flex:1" onclick="joinPrompt()">加入房間</button></div>
+<div id="joinLog">請輸入名後開房。房主開房後唔好關頁，Link入會自動填房號</div>
+<div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div id="roomLink" style="color:#00FF88;font-size:11px;word-break:break-all;text-align:center"></div><button class="btn btnG" style="padding:10px;margin-top:8px" onclick="copyLink()">📋 複製Link</button></div>
+<div id="roomPlayers" style="margin-top:8px"></div>
+<div id="progress" style="text-align:center;margin-top:6px;font-size:12px;color:#aaa"></div>
 </div>
 
 <script>
-let peer = null;
-let isHost = false;
-let myName = '方包包玩家';
-let myPeerId = '';
-let connections = {};
-let hostConn = null;
-let players = {};
-
-let gameState = {
-    status: 'IDLE',
-    lightState: 'RED',
-    startTime: 0,
-    timeoutId: null
-};
-
-function showScreen(screenId) {
-    ['lobbyScreen', 'hostScreen', 'joinScreen', 'gameScreen'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-        document.getElementById(id).classList.remove('flex');
-    });
-    const target = document.getElementById(screenId);
-    target.classList.remove('hidden');
-    target.classList.add('flex');
+let mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0, playMode='room';
+let myName='', myOut=false, aliveList=['玩家'], outList=[], outOrder=[], levelResults=[], gameEnded=false;
+let peer=null, connList=[], myConn=null, isHost=false, currentRoomCode='';
+const freqs=[440,660,880,550,770];
+function $(id){ return document.getElementById(id); }
+let audioCtx=null;
+function getAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+function beep(f,d){ try{ let ctx=getAudio(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.frequency.value=f; g.gain.value=0.5; o.connect(g); g.connect(ctx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+d); o.stop(ctx.currentTime+d);}catch{} }
+function setTab(m){ playMode=m; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); $('tab-'+m).classList.add('active'); $('roomBox').style.display=m==='room'?'block':'none'; }
+function setMode(m){ mode=m; document.querySelectorAll('.lvl').forEach(b=>b.classList.remove('active')); $('lvl-'+m).classList.add('active'); for(let i=0;i<5;i++){ let e=$('l'+i); if(e) e.style.display=i<m?'block':'none'; } if(isHost) broadcast({type:'mode',mode:m}); }
+function lightOn(i){ let e=$('l'+i); if(!e) return; e.classList.add('on'); beep(freqs[i],0.3); setTimeout(()=>e.classList.remove('on'),350); }
+async function doCountdown(){ $('flash').style.display='none'; let cd=$('cd'); cd.style.display='block'; for(let c=3;c>=1;c--){ cd.textContent=c; beep(900,0.2); await new Promise(r=>setTimeout(r,700)); } cd.textContent='GO!'; beep(1500,0.5); await new Promise(r=>setTimeout(r,500)); cd.style.display='none'; $('flash').style.display='block'; }
+async function showSeq(){ showing=true; $('flash').textContent='第'+level+'關 睇 '+seq.length+' 盞'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,500)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,700)); } showing=false; $('flash').textContent='第'+level+'關 按 '+seq.length+' 盞'; startTime=performance.now(); $('time').textContent='⏱️ 計時中...'; player=[]; }
+async function nextLevel(){ if(gameEnded) return; level++; $('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); levelResults=[]; if(isHost) broadcast({type:'seq',seq:seq,level:level,alive:aliveList}); await showSeq(); }
+async function startGame(){
+ try{ getAudio(); }catch{} beep(600,0.1);
+ if(playMode==='room'){
+   myName=$('nameInput').value.trim()||localStorage.getItem('lampName')||''; if(!myName){ alert('請輸入名稱'); setTab('room'); return; }
+   localStorage.setItem('lampName',myName);
+   if(!peer){ alert('請先開房'); return; }
+   if(!isHost){ $('flash').textContent='等房主開始...'; return; }
+   if(connList.length===0){ alert('等朋友加入先'); return; }
+   aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]);
+ } else { aliveList=['玩家']; myName='玩家'; }
+ seq=[]; level=0; outList=[]; outOrder=[]; myOut=false; gameEnded=false; $('alive').textContent=aliveList.length; playing=true;
+ if(isHost) broadcast({type:'countdown',alive:aliveList});
+ await doCountdown(); await nextLevel();
 }
-
-function updateStatus(text, type='error') {
-    const statusEl = document.getElementById('connectionStatus');
-    statusEl.innerText = text;
-    if(type === 'success') {
-        statusEl.className = 'text-xs px-2 py-1 bg-emerald-900/65 text-emerald-300 border border-emerald-700 rounded-full';
-    } else if(type === 'warning') {
-        statusEl.className = 'text-xs px-2 py-1 bg-yellow-900/65 text-yellow-300 border border-yellow-700 rounded-full';
-    } else {
-        statusEl.className = 'text-xs px-2 py-1 bg-red-900/65 text-red-300 border border-red-700 rounded-full';
-    }
+function press(i){
+ lightOn(i);
+ if(!playing||showing||gameEnded||myOut) return;
+ player.push(i); let idx=player.length-1;
+ if(player[idx]!==seq[idx]){ myOut=true; $('flash').textContent='💀 按錯！出局！觀戰中'; beep(120,0.8); $('time').textContent='💀 你已出局'; if(playMode==='room') sendResult(999,false,true); else { playing=false; setTimeout(()=>resetGame(),1500); } return; }
+ if(player.length===seq.length){
+   let t=((performance.now()-startTime)/1000).toFixed(2);
+   if(playMode==='room'){ $('flash').textContent='✅ 完成 '+t+'s 等其他人'; sendResult(parseFloat(t),true,false); $('time').textContent='✅ 等待其他人...'; }
+   else { $('flash').textContent='✅ 第'+level+'關 '+t+'s 3秒後下一關'; beep(1000,0.2); setTimeout(()=>nextLevel(),1200); }
+ }
 }
-
-function generateRoomCode() {
-    return Math.floor(1000 + Math.random() * 9000).toString();
+function resetGame(){ playing=false; showing=false; gameEnded=false; myOut=false; seq=[]; player=[]; level=0; $('level').textContent=0; $('flash').textContent='V12.1 就緒'; $('cd').style.display='none'; $('time').textContent=''; $('mainLB').innerHTML=''; $('progress').textContent=''; }
+function endGameWithWinner(winner){
+ if(gameEnded) return; gameEnded=true; playing=false; beep(600,0.15); setTimeout(()=>beep(900,0.15),150); setTimeout(()=>beep(1200,0.5),300);
+ $('flash').innerHTML='🏆 '+winner+' 勝出！遊戲結束'; $('time').textContent='最終排名';
+ let finalRank=[{name:winner,rank:1}]; let rev=[...outOrder].reverse(); rev.forEach((o,i)=>{ finalRank.push({name:o.name,rank:i+2,level:o.level}); });
+ let html='<div style=text-align:center;font-weight:900;margin:8px 0>🏆 最終排名 - 第'+level+'關結束</div>';
+ finalRank.forEach(r=>{ let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':''; let winClass=r.rank===1?' win':''; let icon=r.rank===1?'👑':r.rank===2?'🥈':r.rank===3?'🥉':r.rank+'.'; let extra=r.rank===1?' - 勝者':' - 第'+(r.level||level)+'關出局'; html+='<div class="row'+meClass+winClass+'"><span>'+icon+' '+displayName+'</span><span style=color:'+(r.rank===1?'#FFEB00':'#aaa')+';font-weight:900>'+extra+'</span></div>'; });
+ $('mainLB').innerHTML=html; if(isHost) broadcast({type:'final',winner:winner,finalRank:finalRank,outOrder:outOrder,level:level});
 }
-
-// 建立房間 (Host)
-function hostGame() {
-    myName = document.getElementById('playerNameInput').value.trim() || '方包包玩家';
-    isHost = true;
-    updateStatus('建立中...', 'warning');
-    
-    const code = generateRoomCode();
-    myPeerId = 'bagel-v22-' + code;
-    
-    if(peer) { peer.destroy(); }
-    
-    peer = new Peer(myPeerId, {
-        host: '0.peerjs.com',
-        port: 443,
-        secure: true,
-        debug: 1
-    });
-
-    peer.on('open', (id) => {
-        document.getElementById('roomCodeDisplay').innerText = code;
-        players[peer.id] = { name: myName + ' (房主)', score: 0 };
-        updatePlayersListUI();
-        showScreen('hostScreen');
-        updateStatus('房間已就緒', 'success');
-    });
-
-    peer.on('connection', (conn) => {
-        conn.on('open', () => {
-            connections[conn.peer] = conn;
-            conn.send({ type: 'UPDATE_PLAYERS', players: players });
-        });
-
-        conn.on('data', (data) => {
-            handleServerData(conn.peer, data);
-        });
-
-        conn.on('close', () => {
-            delete connections[conn.peer];
-            delete players[conn.peer];
-            updatePlayersListUI();
-            broadcastPlayersList();
-        });
-    });
-
-    peer.on('error', (err) => {
-        console.error('Peer Error:', err);
-        if(err.type === 'unavailable-id') {
-            hostGame();
-        } else {
-            updateStatus('建立失敗，請重試');
-        }
-    });
+function loadPeer(cb){ if(window.Peer) return cb(); let s=document.createElement('script'); s.src='https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js'; s.onload=cb; document.head.appendChild(s); }
+function updateList(){ let html='<div class=row>👥 生存'+aliveList.length+'人: '+aliveList.join(', ')+'</div>'; if(outList.length) html+='<div class=row style="opacity:.4">💀 出局: '+outList.join(', ')+'</div>'; $('roomPlayers').innerHTML=html; $('alive').textContent=aliveList.length; }
+function broadcast(o){ connList.forEach(c=>{ try{ if(c.open) c.send(o);}catch{}}); }
+function createRoom(){
+ myName=$('nameInput').value.trim(); if(!myName){ alert('請先輸入名稱'); return; } localStorage.setItem('lampName',myName);
+ loadPeer(()=>{
+   let code=Math.random().toString(36).substring(2,6).toUpperCase(); currentRoomCode=code;
+   // 固定ID，冇時間戳，所以唔會失效
+   let peerId='louis-room-'+code;
+   if(peer) try{peer.destroy();}catch{} isHost=true; connList=[]; outList=[]; outOrder=[]; gameEnded=false;
+   peer=new Peer(peerId,{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+   $('joinLog').textContent='開房中 '+code+'...';
+   peer.on('open',()=>{ $('roomCode').textContent=code; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+code; $('roomLink').textContent=link; history.replaceState(null,'','?room='+code); aliveList=[myName]; updateList(); $('joinLog').textContent='✅ 房間 '+code+' 已開好！唔好關此頁，叫朋友用Link入'; });
+   peer.on('connection',c=>{ connList.push(c); c.on('open',()=>{ $('joinLog').textContent='✅ 有人加入！共 '+(connList.length+1)+' 人'; updateList(); c.send({type:'mode',mode:mode}); }); c.on('data',(d)=>handleData(d,c)); c.on('close',()=>{ connList=connList.filter(x=>x!==c); updateList(); }); });
+   peer.on('error',e=>{ if(e.type==='unavailable-id'){ $('joinLog').textContent='房號 '+code+' 已有人用，換緊新房號...'; setTimeout(()=>createRoom(),800); } });
+ });
 }
-
-function showJoinModal() {
-    isHost = false;
-    showScreen('joinScreen');
+function joinPrompt(){ myName=$('nameInput').value.trim(); if(!myName){ alert('請先輸入名稱'); setTab('room'); return; } localStorage.setItem('lampName',myName); let c=prompt('輸入4位房間碼:'); if(!c) return; joinRoom(c.toUpperCase().trim()); }
+function joinRoom(code){
+ loadPeer(()=>{
+   if(peer) try{peer.destroy();}catch{}
+   peer=new Peer({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});
+   $('joinLog').textContent='搵緊房主 '+code+'...';
+   peer.on('open',()=>{
+     // 固定ID，絕對搵到
+     let targetId='louis-room-'+code;
+     let conn=peer.connect(targetId,{reliable:true});
+     let ok=false;
+     let timer=setTimeout(()=>{ if(!ok){ $('joinLog').textContent='❌ 搵唔到 '+code+'\n1.房主關咗頁\n2.房主同你唔同版本\n請叫房主用V12.1重開'; } },6000);
+     conn.on('open',()=>{ clearTimeout(timer); ok=true; myConn=conn; $('roomCode').textContent=code; $('roomInfo').style.display='block'; $('joinLog').textContent='✅ 已連接 '+code+' 等房主開始'; conn.send({type:'join',name:myName}); });
+     conn.on('data',d=>handleData(d));
+     conn.on('error',()=>{ clearTimeout(timer); $('joinLog').textContent='❌ 連線失敗 '+code; });
+   });
+ });
 }
-
-function backToLobby() {
-    if(peer) {
-        peer.destroy();
-        peer = null;
-    }
-    connections = {};
-    hostConn = null;
-    players = {};
-    isHost = false;
-    updateStatus('未連線', 'error');
-    showScreen('lobbyScreen');
+function renderBoard(){
+ if(gameEnded) return;
+ let title='<div style=text-align:center;font-weight:900;margin:6px 0>🏆 第'+level+'關 生存'+aliveList.length+'人</div>';
+ let sorted=[...levelResults].sort((a,b)=>a.time-b.time);
+ let html=title;
+ sorted.forEach((r,i)=>{ let ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.'; let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':''; html+='<div class="row'+meClass+'"><span>'+ic+' '+displayName+'</span><span style=color:#0f8;font-weight:900>'+r.time.toFixed(2)+'s</span></div>'; });
+ outList.forEach(n=>{ let isMe=n===myName; let displayName=isMe? n+' (你)' : n; html+='<div class="row" style="opacity:.4"><span>💀 '+displayName+' (出局)</span></div>'; });
+ $('mainLB').innerHTML=html; if(isHost) broadcast({type:'boardData',level:level,results:levelResults,outList:outList,alive:aliveList,outOrder:outOrder});
 }
-
-// 加入房間 (Client)
-function connectToPeer() {
-    const codeInput = document.getElementById('targetPeerIdInput').value.trim();
-    const joinStatus = document.getElementById('joinStatusText');
-    
-    if(!codeInput || codeInput.length !== 4) {
-        joinStatus.innerText = '請輸入正確的 4 位數房間代碼！';
-        joinStatus.className = 'text-xs text-center text-red-400';
-        return;
-    }
-    
-    myName = document.getElementById('playerNameInput').value.trim() || '方包包玩家';
-    updateStatus('連線中...', 'warning');
-    joinStatus.innerText = '正在連線至房主房間...';
-    joinStatus.className = 'text-xs text-center text-yellow-400';
-    
-    if(peer) { peer.destroy(); }
-    
-    peer = new Peer({
-        host: '0.peerjs.com',
-        port: 443,
-        secure: true,
-        debug: 1
-    });
-    
-    peer.on('open', (id) => {
-        myPeerId = id;
-        const targetFullId = 'bagel-v22-' + codeInput;
-        hostConn = peer.connect(targetFullId);
-        
-        hostConn.on('open', () => {
-            updateStatus('已連線', 'success');
-            hostConn.send({ type: 'JOIN_ROOM', name: myName });
-            showScreen('gameScreen');
-        });
-
-        hostConn.on('data', (data) => {
-            handleClientData(data);
-        });
-
-        hostConn.on('close', () => {
-            updateStatus('房主已斷線', 'error');
-            alert('房主已關閉房間！');
-            backToLobby();
-        });
-    });
-    
-    peer.on('error', (err) => {
-        console.error('Connect Error:', err);
-        updateStatus('連線失敗');
-        joinStatus.innerText = '找不到該房間，請核對 4 位代碼！';
-        joinStatus.className = 'text-xs text-center text-red-400';
-    });
+async function handleData(data,conn){
+ if(!data) return;
+ if(data.type==='mode'){ setMode(data.mode); }
+ if(data.type==='countdown'){ aliveList=data.alive||aliveList; $('alive').textContent=aliveList.length; playing=true; myOut=outList.includes(myName); await doCountdown(); }
+ if(data.type==='seq'){ seq=data.seq; level=data.level; aliveList=data.alive||aliveList; $('level').textContent=level; $('alive').textContent=aliveList.length; playing=true; await showSeq(); }
+ if(data.type==='join' && isHost){ if(conn) conn.playerName=data.name; aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]); updateList(); }
+ if(data.type==='result'){
+   if(gameEnded) return;
+   if(data.isOut){ if(!outList.includes(data.name)){ outList.push(data.name); outOrder.push({name:data.name,level:level}); } aliveList=aliveList.filter(n=>n!==data.name); $('alive').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; renderBoard(); if(isHost){ if(aliveList.length===1){ endGameWithWinner(aliveList[0]); } else { broadcast({type:'out',name:data.name,alive:aliveList,outOrder:outOrder}); checkAllDone(); } } }
+   else { levelResults.push({name:data.name,time:data.time}); $('progress').textContent='✅ '+levelResults.length+'/'+aliveList.length+' 完成'; renderBoard(); if(isHost) checkAllDone(); }
+ }
+ if(data.type==='out'){ if(!outList.includes(data.name)) outList.push(data.name); outOrder=data.outOrder||outOrder; aliveList=data.alive; $('alive').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！'; updateList(); renderBoard(); if(myName===data.name){ myOut=true; $('flash').textContent='💀 你已出局 - 觀戰中'; } }
+ if(data.type==='final'){ gameEnded=true; playing=false; $('flash').innerHTML='🏆 '+data.winner+' 勝出！'; let html='<div style=text-align:center;font-weight:900;margin:8px 0>🏆 最終排名 - 第'+data.level+'關結束</div>'; data.finalRank.forEach(r=>{ let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':''; let winClass=r.rank===1?' win':''; let icon=r.rank===1?'👑':r.rank===2?'🥈':r.rank===3?'🥉':r.rank+'.'; let extra=r.rank===1?' - 勝者':' - 第'+(r.level||data.level)+'關出局'; html+='<div class="row'+meClass+winClass+'"><span>'+icon+' '+displayName+'</span><span style=color:'+(r.rank===1?'#FFEB00':'#aaa')+';font-weight:900>'+extra+'</span></div>'; }); $('mainLB').innerHTML=html; }
+ if(data.type==='boardData'){ levelResults=data.results||[]; outList=data.outList||[]; aliveList=data.alive||aliveList; outOrder=data.outOrder||outOrder; renderBoard(); }
 }
-
-function copyRoomCode() {
-    const code = document.getElementById('roomCodeDisplay').innerText;
-    if(navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(code).then(() => {
-            alert('已複製房號代碼：' + code);
-        });
-    } else {
-        const tempInput = document.createElement('input');
-        tempInput.value = code;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-        alert('已複製房號代碼：' + code);
-    }
-}
-
-function broadcast(data) {
-    for(let id in connections) {
-        if(connections[id].open) {
-            connections[id].send(data);
-        }
-    }
-}
-
-function broadcastPlayersList() {
-    broadcast({ type: 'UPDATE_PLAYERS', players: players });
-    updateScoreboardUI();
-}
-
-function updatePlayersListUI() {
-    const container = document.getElementById('playersListContainer');
-    container.innerHTML = '';
-    
-    let count = 0;
-    for(let id in players) {
-        count++;
-        const div = document.createElement('div');
-        div.className = 'flex justify-between items-center bg-neutral-900/80 px-2.5 py-1.5 rounded-lg';
-        div.innerHTML = `<span class="font-bold text-white">${players[id].name}</span><span class="text-emerald-400 text-[10px]">已就緒</span>`;
-        container.appendChild(div);
-    }
-    
-    const startBtn = document.getElementById('startMatchBtn');
-    if(count >= 1) {
-        startBtn.disabled = false;
-        startBtn.className = 'mt-2 w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-black font-black py-3 rounded-xl shadow-lg hover:opacity-95 active:scale-95 transition cursor-pointer';
-        startBtn.innerText = `開始對決 (共 ${count} 人)`;
-    } else {
-        startBtn.disabled = true;
-        startBtn.className = 'mt-2 w-full bg-neutral-800 text-neutral-500 font-black py-3 rounded-xl transition cursor-not-allowed';
-    }
-}
-
-function handleServerData(senderId, data) {
-    switch(data.type) {
-        case 'JOIN_ROOM':
-            players[senderId] = { name: data.name, score: 0 };
-            updatePlayersListUI();
-            broadcastPlayersList();
-            break;
-        case 'PLAYER_ACTION':
-            handlePlayerAction(senderId, data.time, data.isEarly);
-            break;
-    }
-}
-
-function handleClientData(data) {
-    switch(data.type) {
-        case 'UPDATE_PLAYERS':
-            players = data.players;
-            updateScoreboardUI();
-            break;
-        case 'START_ROUND':
-            triggerRedLightPhase();
-            break;
-        case 'LIGHT_GREEN':
-            triggerGreenLightPhase(data.startTime);
-            break;
-        case 'ROUND_RESULT':
-            document.getElementById('instructionText').innerText = data.message;
-            break;
-    }
-}
-
-function startMatch() {
-    if(!isHost) return;
-    for(let id in players) {
-        players[id].score = 0;
-    }
-    showScreen('gameScreen');
-    broadcastPlayersList();
-    nextRound();
-}
-
-function nextRound() {
-    if(!isHost) return;
-    broadcast({ type: 'START_ROUND' });
-    triggerRedLightPhase();
-}
-
-function triggerRedLightPhase() {
-    gameState.lightState = 'RED';
-    gameState.status = 'WAITING';
-    
-    const bulb = document.getElementById('lightBulb');
-    const text = document.getElementById('lightText');
-    const inst = document.getElementById('instructionText');
-    const btn = document.getElementById('actionBtn');
-
-    bulb.className = 'w-28 h-28 rounded-full bg-red-600 border-4 border-red-500 shadow-lg shadow-red-900/50 flex items-center justify-center transition-all duration-200 animate-pulse';
-    text.innerText = '紅燈';
-    text.className = 'text-xs font-black text-white';
-    inst.innerText = '燈號正紅，請勿按！等待綠燈亮起...';
-    
-    btn.disabled = false;
-    btn.className = 'w-full py-6 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 text-white text-xl font-black shadow-2xl hover:opacity-95 active:scale-95 transition cursor-pointer';
-    btn.innerText = ' 點擊搶答 / 偷跑測試 ';
-
-    if(isHost) {
-        const randomDelay = Math.floor(Math.random() * 3000) + 2000;
-        gameState.timeoutId = setTimeout(() => {
-            const startTime = Date.now();
-            gameState.startTime = startTime;
-            broadcast({ type: 'LIGHT_GREEN', startTime: startTime });
-            triggerGreenLightPhase(startTime);
-        }, randomDelay);
-    }
-}
-
-function triggerGreenLightPhase(startTime) {
-    gameState.lightState = 'GREEN';
-    gameState.status = 'READY';
-    gameState.startTime = startTime;
-
-    const bulb = document.getElementById('lightBulb');
-    const text = document.getElementById('lightText');
-    const inst = document.getElementById('instructionText');
-    const btn = document.getElementById('actionBtn');
-
-    bulb.className = 'w-28 h-28 rounded-full bg-emerald-500 border-4 border-emerald-400 shadow-lg shadow-emerald-900/50 flex items-center justify-center transition-all duration-200 animate-bounce';
-    text.innerText = '綠燈！';
-    text.className = 'text-xs font-black text-black';
-    inst.innerText = '🟢 綠燈亮起！立刻按下！';
-    
-    btn.className = 'w-full py-6 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-black text-xl font-black shadow-2xl hover:opacity-95 active:scale-95 transition cursor-pointer';
-    btn.innerText = ' ⚡ 立即按下！ ';
-}
-
-let hasAnsweredThisRound = false;
-
-function playerAction() {
-    if(hasAnsweredThisRound) return;
-    hasAnsweredThisRound = true;
-
-    const now = Date.now();
-    const btn = document.getElementById('actionBtn');
-    btn.disabled = true;
-
-    if(gameState.lightState === 'RED') {
-        document.getElementById('instructionText').innerText = '❌ 偷跑犯規！扣一分！';
-        btn.className = 'w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl cursor-not-allowed';
-        btn.innerText = '犯規被罰';
-
-        if(isHost) {
-            clearTimeout(gameState.timeoutId);
-            if(players[myPeerId]) {
-                players[myPeerId].score = Math.max(0, players[myPeerId].score - 1);
-            }
-            broadcastPlayersList();
-            setTimeout(() => { hasAnsweredThisRound = false; nextRound(); }, 2500);
-        } else {
-            hostConn.send({ type: 'PLAYER_ACTION', time: now, isEarly: true });
-        }
-    } else if(gameState.lightState === 'GREEN') {
-        const reactionTime = now - gameState.startTime;
-        document.getElementById('instructionText').innerText = `⚡ 反應時間：${reactionTime} ms`;
-        btn.className = 'w-full py-6 rounded-2xl bg-neutral-800 text-neutral-500 text-xl font-black shadow-2xl cursor-not-allowed';
-        btn.innerText = `${reactionTime} ms`;
-
-        if(isHost) {
-            if(players[myPeerId]) {
-                players[myPeerId].score += 1;
-            }
-            broadcastPlayersList();
-            broadcast({ type: 'ROUND_RESULT', message: `🎉 本回合由 ${players[myPeerId]?.name || '玩家'} 率先搶中！(${reactionTime} ms)` });
-            setTimeout(() => { hasAnsweredThisRound = false; nextRound(); }, 3000);
-        } else {
-            hostConn.send({ type: 'PLAYER_ACTION', time: reactionTime, isEarly: false });
-        }
-    }
-}
-
-function handlePlayerAction(senderId, time, isEarly) {
-    if(!isHost) return;
-    
-    const pName = players[senderId]?.name || '對手';
-    if(isEarly) {
-        if(players[senderId]) {
-            players[senderId].score = Math.max(0, players[senderId].score - 1);
-        }
-        broadcast({ type: 'ROUND_RESULT', message: `⚠️ ${pName} 偷跑犯規被扣分！` });
-    } else {
-        if(players[senderId]) {
-            players[senderId].score += 1;
-        }
-        broadcast({ type: 'ROUND_RESULT', message: `🏆 ${pName} 搶答成功！反應：${time} ms` });
-        broadcastPlayersList();
-        
-        setTimeout(() => {
-            nextRound();
-        }, 3000);
-    }
-    broadcastPlayersList();
-}
-
-function updateScoreboardUI() {
-    const container = document.getElementById('scoreboardContainer');
-    container.innerHTML = '';
-    
-    for(let id in players) {
-        const p = players[id];
-        const isMe = (id =
+function checkAllDone(){ if(gameEnded) return; if(levelResults.length>=aliveList.length){ if(aliveList.length===1){ endGameWithWinner(aliveList[0]); return; } let sec=3; $('flash').textContent='剩'+aliveList.length+'人！'+sec+'秒後第'+(level+1)+'關...'; beep(800,0.2); let t=setInterval(()=>{ sec--; if(sec>0){ $('flash').textContent='剩'+aliveList.length+'人！'+sec+'秒後第'+(level+1)+'關...'; beep(800,0.2); } else clearInterval(t); },1000); setTimeout(async()=>{ if(!gameEnded){ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevel(); } },3000); } }
+function sendResult(t,ok,isOut){ let p={type:'result',name:myName,time:t,ok:ok,isOut:isOut}; if(isHost) handleData(p,null); else if(myConn&&myConn.open) myConn.send(p); }
+function copyLink(){ let l=$('roomLink').textContent; if(!l){ alert('未有Link'); return; } navigator.clipboard.writeText(l).then(()=>alert('已複製')); }
+if(localStorage.getItem('lampName')) $('nameInput').value=localStorage.getItem('lampName');
+setMode(3);
+function checkUrl(){ let p=new URLSearchParams(location.search).get('room'); if(p){ setTab('room'); $('nameInput').value=localStorage.getItem('lampName')||''; } } checkUrl();
+</script>
+</body></html>
