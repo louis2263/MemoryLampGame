@@ -1,29 +1,31 @@
 <!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>方包包 V12.1 固定房號</title>
+<title>方包包 V14.0 記憶王獎牌</title>
 <style>
 body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;font-family:sans-serif;padding-bottom:30px}
 .ver{background:#FFEB00;color:#000;padding:4px 12px;border-radius:99px;font-weight:900;font-size:12px;position:fixed;top:8px;right:8px;z-index:20}
 h1{margin:50px 0 8px;color:#FFEB00;font-size:26px}
-.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:400px;margin:6px 0}
+.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0}
 .tab,.lvl{flex:1;padding:12px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:13px;text-align:center}
 .tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
 .flash{color:#FFEB00;font-weight:900;font-size:20px;margin:12px 0;min-height:28px;text-align:center}
 #cd{font-size:90px;font-weight:900;color:#FFEB00;display:none;text-align:center;margin:10px}
-.light{width:92%;max-width:400px;height:86px;border-radius:20px;border:0;margin:7px 0;font-size:22px;font-weight:900;color:#fff}
+.light{width:92%;max-width:420px;height:86px;border-radius:20px;border:0;margin:7px 0;font-size:22px;font-weight:900;color:#fff}
 #l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835} #l3{background:#0055D0} #l4{background:#8A00C2}
 .light.on{box-shadow:0 0 30px #fff;filter:brightness(1.6)}
-.btn{width:92%;max-width:400px;padding:16px;border-radius:99px;border:0;font-weight:900;font-size:17px;margin:6px 0}
+.btn{width:92%;max-width:420px;padding:16px;border-radius:99px;border:0;font-weight:900;font-size:17px;margin:6px 0}
 .btnY{background:#FFEB00;color:#000}.btnG{background:#333;color:#fff}
-.box{width:92%;max-width:400px;background:#121212;border:1px solid #444;border-radius:16px;padding:14px;margin-top:12px}
+.box{width:92%;max-width:420px;background:#121212;border:1px solid #444;border-radius:16px;padding:14px;margin-top:12px}
 .nameI{width:100%;padding:12px;border-radius:10px;border:2px solid #555;background:#000;color:#fff;font-size:15px;font-weight:700}
 .code{font-size:36px;font-weight:900;letter-spacing:8px;color:#00FF88;text-align:center;margin:8px 0}
-.row{display:flex;justify-content:space-between;background:#1a1a1a;padding:10px 12px;border-radius:10px;border:1px solid #222;margin-top:6px;font-size:13px}
+.row{display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;padding:12px 12px;border-radius:12px;border:1px solid #222;margin-top:8px;font-size:13px;line-height:1.4}
 .row.me{border-color:#FFEB00;background:#2a2a00}
-.row.win{border-color:#FFEB00;background:linear-gradient(90deg,#FFEB0022,#00FF8822)}
+.row.king{border-color:#FFD700;background:linear-gradient(90deg,#FFD70033,#FFEB0033);box-shadow:0 0 15px #FFD70066}
+.badge{font-size:11px;background:#000;border-radius:99px;padding:3px 8px;border:1px solid #444;margin-left:4px}
+.medalCount{font-size:11px;color:#FFD700;margin-left:6px}
 #joinLog{font-size:13px;text-align:center;margin-top:8px;padding:10px;border-radius:8px;background:#222;color:#FFEB00;white-space:pre-line;line-height:1.6}
 </style>
 </head><body>
-<div class="ver">V12.1 固定房號</div>
+<div class="ver">V14.0 記憶王</div>
 <h1>燈號對決</h1>
 
 <div class="tabs">
@@ -39,7 +41,7 @@ h1{margin:50px 0 8px;color:#FFEB00;font-size:26px}
 
 <div style="display:flex;gap:6px;margin:8px 0"><div style="background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:99px;font-size:12px">關卡 <b id="level" style="color:#FFEB00">0</b></div><div style="background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:99px;font-size:12px">生存 <b id="alive" style="color:#FFEB00">1</b></div></div>
 
-<div class="flash" id="flash">V12.1 - 固定房號唔會失效</div>
+<div class="flash" id="flash">V14.0 - 記憶王獎牌制</div>
 <div id="cd">3</div>
 <div id="time" style="color:#888;font-size:12px;min-height:16px"></div>
 
@@ -49,16 +51,16 @@ h1{margin:50px 0 8px;color:#FFEB00;font-size:26px}
 <button class="light" id="l3" onclick="press(3)" style="display:none">🔵 藍</button>
 <button class="light" id="l4" onclick="press(4)" style="display:none">🟣 紫</button>
 
-<div id="mainLB" style="width:92%;max-width:400px;margin-top:10px"></div>
+<div id="mainLB" style="width:92%;max-width:420px;margin-top:12px"></div>
 
 <button class="btn btnY" onclick="startGame()">▶️ 開始</button>
 <button class="btn btnG" onclick="resetGame()">↻ 重置</button>
 
 <div class="box" id="roomBox">
 <div style="font-weight:900">💀 淘汰賽房間</div>
-<input id="nameInput" class="nameI" style="margin-top:10px" placeholder="你的名稱 必填 例如 Kennis" maxlength="10">
+<input id="nameInput" class="nameI" style="margin-top:10px" placeholder="你的名稱 必填 例如 louis" maxlength="10">
 <div style="display:flex;gap:6px;margin-top:10px"><button class="btn btnY" style="flex:1" onclick="createRoom()">開新房間</button><button class="btn btnG" style="flex:1" onclick="joinPrompt()">加入房間</button></div>
-<div id="joinLog">請輸入名後開房。房主開房後唔好關頁，Link入會自動填房號</div>
+<div id="joinLog">輸入名後開房。金銀銅會喺名隔離顯示</div>
 <div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div id="roomLink" style="color:#00FF88;font-size:11px;word-break:break-all;text-align:center"></div><button class="btn btnG" style="padding:10px;margin-top:8px" onclick="copyLink()">📋 複製Link</button></div>
 <div id="roomPlayers" style="margin-top:8px"></div>
 <div id="progress" style="text-align:center;margin-top:6px;font-size:12px;color:#aaa"></div>
@@ -68,6 +70,7 @@ h1{margin:50px 0 8px;color:#FFEB00;font-size:26px}
 let mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0, playMode='room';
 let myName='', myOut=false, aliveList=['玩家'], outList=[], outOrder=[], levelResults=[], gameEnded=false;
 let peer=null, connList=[], myConn=null, isHost=false, currentRoomCode='';
+let playerStats={}; // name -> {gold,silver,bronze,totalTime}
 const freqs=[440,660,880,550,770];
 function $(id){ return document.getElementById(id); }
 let audioCtx=null;
@@ -79,6 +82,27 @@ function lightOn(i){ let e=$('l'+i); if(!e) return; e.classList.add('on'); beep(
 async function doCountdown(){ $('flash').style.display='none'; let cd=$('cd'); cd.style.display='block'; for(let c=3;c>=1;c--){ cd.textContent=c; beep(900,0.2); await new Promise(r=>setTimeout(r,700)); } cd.textContent='GO!'; beep(1500,0.5); await new Promise(r=>setTimeout(r,500)); cd.style.display='none'; $('flash').style.display='block'; }
 async function showSeq(){ showing=true; $('flash').textContent='第'+level+'關 睇 '+seq.length+' 盞'; for(let i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,500)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,700)); } showing=false; $('flash').textContent='第'+level+'關 按 '+seq.length+' 盞'; startTime=performance.now(); $('time').textContent='⏱️ 計時中...'; player=[]; }
 async function nextLevel(){ if(gameEnded) return; level++; $('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); levelResults=[]; if(isHost) broadcast({type:'seq',seq:seq,level:level,alive:aliveList}); await showSeq(); }
+function initStats(names){ names.forEach(n=>{ if(!playerStats[n]) playerStats[n]={gold:0,silver:0,bronze:0,totalTime:0,levels:0}; }); }
+function addMedalsForLevel(){
+ let sorted=[...levelResults].sort((a,b)=>a.time-b.time);
+ sorted.forEach((r,idx)=>{
+   if(!playerStats[r.name]) playerStats[r.name]={gold:0,silver:0,bronze:0,totalTime:0,levels:0};
+   playerStats[r.name].totalTime+=r.time;
+   playerStats[r.name].levels++;
+   if(idx===0) playerStats[r.name].gold++;
+   else if(idx===1) playerStats[r.name].silver++;
+   else if(idx===2) playerStats[r.name].bronze++;
+ });
+ if(isHost) broadcast({type:'stats',stats:playerStats});
+}
+function formatMedals(s){
+ if(!s) return '';
+ let parts=[];
+ if(s.gold>0) parts.push('🥇x'+s.gold);
+ if(s.silver>0) parts.push('🥈x'+s.silver);
+ if(s.bronze>0) parts.push('🥉x'+s.bronze);
+ return parts.join(' ');
+}
 async function startGame(){
  try{ getAudio(); }catch{} beep(600,0.1);
  if(playMode==='room'){
@@ -89,8 +113,10 @@ async function startGame(){
    if(connList.length===0){ alert('等朋友加入先'); return; }
    aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]);
  } else { aliveList=['玩家']; myName='玩家'; }
- seq=[]; level=0; outList=[]; outOrder=[]; myOut=false; gameEnded=false; $('alive').textContent=aliveList.length; playing=true;
- if(isHost) broadcast({type:'countdown',alive:aliveList});
+ seq=[]; level=0; outList=[]; outOrder=[]; myOut=false; gameEnded=false; playerStats={};
+ initStats(aliveList);
+ $('alive').textContent=aliveList.length; playing=true;
+ if(isHost) broadcast({type:'countdown',alive:aliveList,stats:playerStats});
  await doCountdown(); await nextLevel();
 }
 function press(i){
@@ -99,35 +125,58 @@ function press(i){
  player.push(i); let idx=player.length-1;
  if(player[idx]!==seq[idx]){ myOut=true; $('flash').textContent='💀 按錯！出局！觀戰中'; beep(120,0.8); $('time').textContent='💀 你已出局'; if(playMode==='room') sendResult(999,false,true); else { playing=false; setTimeout(()=>resetGame(),1500); } return; }
  if(player.length===seq.length){
-   let t=((performance.now()-startTime)/1000).toFixed(2);
-   if(playMode==='room'){ $('flash').textContent='✅ 完成 '+t+'s 等其他人'; sendResult(parseFloat(t),true,false); $('time').textContent='✅ 等待其他人...'; }
+   let t=parseFloat(((performance.now()-startTime)/1000).toFixed(2));
+   if(playMode==='room'){ $('flash').textContent='✅ 完成 '+t+'s 等其他人'; sendResult(t,true,false); $('time').textContent='✅ 等待其他人...'; }
    else { $('flash').textContent='✅ 第'+level+'關 '+t+'s 3秒後下一關'; beep(1000,0.2); setTimeout(()=>nextLevel(),1200); }
  }
 }
-function resetGame(){ playing=false; showing=false; gameEnded=false; myOut=false; seq=[]; player=[]; level=0; $('level').textContent=0; $('flash').textContent='V12.1 就緒'; $('cd').style.display='none'; $('time').textContent=''; $('mainLB').innerHTML=''; $('progress').textContent=''; }
+function resetGame(){ playing=false; showing=false; gameEnded=false; myOut=false; seq=[]; player=[]; level=0; $('level').textContent=0; $('flash').textContent='V14.0 記憶王獎牌制'; $('cd').style.display='none'; $('time').textContent=''; $('mainLB').innerHTML=''; $('progress').textContent=''; }
+function getSortedRanking(){
+ let names=Object.keys(playerStats);
+ names=names.concat(aliveList.filter(n=>!names.includes(n))).concat(outList.filter(n=>!names.includes(n)));
+ let uniq=[...new Set(names)];
+ uniq.forEach(n=>{ if(!playerStats[n]) playerStats[n]={gold:0,silver:0,bronze:0,totalTime:9999,levels:0}; });
+ return uniq.sort((a,b)=>{
+   let sa=playerStats[a], sb=playerStats[b];
+   if(sb.gold!==sa.gold) return sb.gold-sa.gold;
+   if(sb.silver!==sa.silver) return sb.silver-sa.silver;
+   if(sb.bronze!==sa.bronze) return sb.bronze-sa.bronze;
+   return sa.totalTime-sb.totalTime;
+ });
+}
 function endGameWithWinner(winner){
- if(gameEnded) return; gameEnded=true; playing=false; beep(600,0.15); setTimeout(()=>beep(900,0.15),150); setTimeout(()=>beep(1200,0.5),300);
- $('flash').innerHTML='🏆 '+winner+' 勝出！遊戲結束'; $('time').textContent='最終排名';
- let finalRank=[{name:winner,rank:1}]; let rev=[...outOrder].reverse(); rev.forEach((o,i)=>{ finalRank.push({name:o.name,rank:i+2,level:o.level}); });
- let html='<div style=text-align:center;font-weight:900;margin:8px 0>🏆 最終排名 - 第'+level+'關結束</div>';
- finalRank.forEach(r=>{ let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':''; let winClass=r.rank===1?' win':''; let icon=r.rank===1?'👑':r.rank===2?'🥈':r.rank===3?'🥉':r.rank+'.'; let extra=r.rank===1?' - 勝者':' - 第'+(r.level||level)+'關出局'; html+='<div class="row'+meClass+winClass+'"><span>'+icon+' '+displayName+'</span><span style=color:'+(r.rank===1?'#FFEB00':'#aaa')+';font-weight:900>'+extra+'</span></div>'; });
- $('mainLB').innerHTML=html; if(isHost) broadcast({type:'final',winner:winner,finalRank:finalRank,outOrder:outOrder,level:level});
+ if(gameEnded) return; gameEnded=true; playing=false;
+ beep(600,0.15); setTimeout(()=>beep(900,0.15),150); setTimeout(()=>beep(1200,0.5),300);
+ let ranking=getSortedRanking();
+ let king=ranking[0]||winner;
+ $('flash').innerHTML='👑 記憶王 - '+king+'！'; $('time').textContent='獎牌榜排名';
+ let html='<div style=text-align:center;font-weight:900;margin:8px 0>👑 記憶王 - 最終獎牌榜 第'+level+'關結束</div>';
+ ranking.forEach((name,idx)=>{
+   let s=playerStats[name]||{gold:0,silver:0,bronze:0,totalTime:0};
+   let isMe=name===myName; let displayName=isMe? name+' (你)' : name;
+   let isKing=idx===0; let rowClass=isKing?' row king':' row'+(isMe?' me':'');
+   let icon=isKing?'👑':idx===1?'🥈':idx===2?'🥉':(idx+1)+'.';
+   let medals=formatMedals(s);
+   let timeStr=s.totalTime>0&&s.totalTime<9999? s.totalTime.toFixed(2)+'s' : '-';
+   html+='<div class="'+rowClass+'"><div><span>'+icon+' '+displayName+'</span><span class="medalCount">'+medals+'</span></div><div style="text-align:right"><div style="color:'+(isKing?'#FFD700':'#aaa')+';font-weight:900;font-size:11px">'+'🥇'+s.gold+' 🥈'+s.silver+' 🥉'+s.bronze+'</div><div style="font-size:11px;color:#0f8">'+timeStr+'</div></div></div>';
+ });
+ $('mainLB').innerHTML=html;
+ if(isHost) broadcast({type:'final',winner:king,ranking:ranking,stats:playerStats,level:level});
 }
 function loadPeer(cb){ if(window.Peer) return cb(); let s=document.createElement('script'); s.src='https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js'; s.onload=cb; document.head.appendChild(s); }
-function updateList(){ let html='<div class=row>👥 生存'+aliveList.length+'人: '+aliveList.join(', ')+'</div>'; if(outList.length) html+='<div class=row style="opacity:.4">💀 出局: '+outList.join(', ')+'</div>'; $('roomPlayers').innerHTML=html; $('alive').textContent=aliveList.length; }
+function updateList(){ let html=''; getSortedRanking().forEach(name=>{ let s=playerStats[name]; let medals=s? formatMedals(s):''; let isMe=name===myName; let dName=isMe? name+' (你)' : name; let meClass=isMe?' me':''; html+='<div class="row'+meClass+'"><span>👤 '+dName+'</span><span class="medalCount">'+medals+'</span></div>'; }); if(outList.length) html+='<div class="row" style="opacity:.4">💀 出局: '+outList.join(', ')+'</div>'; $('roomPlayers').innerHTML=html; $('alive').textContent=aliveList.length; }
 function broadcast(o){ connList.forEach(c=>{ try{ if(c.open) c.send(o);}catch{}}); }
 function createRoom(){
  myName=$('nameInput').value.trim(); if(!myName){ alert('請先輸入名稱'); return; } localStorage.setItem('lampName',myName);
  loadPeer(()=>{
    let code=Math.random().toString(36).substring(2,6).toUpperCase(); currentRoomCode=code;
-   // 固定ID，冇時間戳，所以唔會失效
    let peerId='louis-room-'+code;
-   if(peer) try{peer.destroy();}catch{} isHost=true; connList=[]; outList=[]; outOrder=[]; gameEnded=false;
-   peer=new Peer(peerId,{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+   if(peer) try{peer.destroy();}catch{} isHost=true; connList=[]; outList=[]; outOrder=[]; gameEnded=false; playerStats={};
+   peer=new Peer(peerId,{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});
    $('joinLog').textContent='開房中 '+code+'...';
-   peer.on('open',()=>{ $('roomCode').textContent=code; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+code; $('roomLink').textContent=link; history.replaceState(null,'','?room='+code); aliveList=[myName]; updateList(); $('joinLog').textContent='✅ 房間 '+code+' 已開好！唔好關此頁，叫朋友用Link入'; });
-   peer.on('connection',c=>{ connList.push(c); c.on('open',()=>{ $('joinLog').textContent='✅ 有人加入！共 '+(connList.length+1)+' 人'; updateList(); c.send({type:'mode',mode:mode}); }); c.on('data',(d)=>handleData(d,c)); c.on('close',()=>{ connList=connList.filter(x=>x!==c); updateList(); }); });
-   peer.on('error',e=>{ if(e.type==='unavailable-id'){ $('joinLog').textContent='房號 '+code+' 已有人用，換緊新房號...'; setTimeout(()=>createRoom(),800); } });
+   peer.on('open',()=>{ $('roomCode').textContent=code; $('roomInfo').style.display='block'; let link=location.origin+location.pathname+'?room='+code; $('roomLink').textContent=link; history.replaceState(null,'','?room='+code); aliveList=[myName]; initStats(aliveList); updateList(); $('joinLog').textContent='✅ 房間 '+code+' 已開好！唔好關此頁'; });
+   peer.on('connection',c=>{ connList.push(c); c.on('open',()=>{ $('joinLog').textContent='✅ 有人加入！共 '+(connList.length+1)+' 人'; if(!playerStats[c.playerName]){ if(c.playerName) initStats([c.playerName]); } updateList(); c.send({type:'mode',mode:mode}); c.send({type:'stats',stats:playerStats}); }); c.on('data',(d)=>handleData(d,c)); c.on('close',()=>{ connList=connList.filter(x=>x!==c); updateList(); }); });
+   peer.on('error',e=>{ if(e.type==='unavailable-id'){ $('joinLog').textContent='房號 '+code+' 已有人用，換緊...'; setTimeout(()=>createRoom(),800); } });
  });
 }
 function joinPrompt(){ myName=$('nameInput').value.trim(); if(!myName){ alert('請先輸入名稱'); setTab('room'); return; } localStorage.setItem('lampName',myName); let c=prompt('輸入4位房間碼:'); if(!c) return; joinRoom(c.toUpperCase().trim()); }
@@ -137,46 +186,45 @@ function joinRoom(code){
    peer=new Peer({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});
    $('joinLog').textContent='搵緊房主 '+code+'...';
    peer.on('open',()=>{
-     // 固定ID，絕對搵到
      let targetId='louis-room-'+code;
      let conn=peer.connect(targetId,{reliable:true});
      let ok=false;
-     let timer=setTimeout(()=>{ if(!ok){ $('joinLog').textContent='❌ 搵唔到 '+code+'\n1.房主關咗頁\n2.房主同你唔同版本\n請叫房主用V12.1重開'; } },6000);
+     let timer=setTimeout(()=>{ if(!ok){ $('joinLog').textContent='❌ 搵唔到 '+code+'\n房主關咗頁或唔同版本\n請叫房主用V14.0重開'; } },6000);
      conn.on('open',()=>{ clearTimeout(timer); ok=true; myConn=conn; $('roomCode').textContent=code; $('roomInfo').style.display='block'; $('joinLog').textContent='✅ 已連接 '+code+' 等房主開始'; conn.send({type:'join',name:myName}); });
      conn.on('data',d=>handleData(d));
-     conn.on('error',()=>{ clearTimeout(timer); $('joinLog').textContent='❌ 連線失敗 '+code; });
+     conn.on('error',()=>{ clearTimeout(timer); });
    });
  });
 }
 function renderBoard(){
  if(gameEnded) return;
- let title='<div style=text-align:center;font-weight:900;margin:6px 0>🏆 第'+level+'關 生存'+aliveList.length+'人</div>';
+ let title='<div style=text-align:center;font-weight:900;margin:6px 0>🏆 第'+level+'關 生存'+aliveList.length+'人 - 獎牌榜</div>';
  let sorted=[...levelResults].sort((a,b)=>a.time-b.time);
  let html=title;
- sorted.forEach((r,i)=>{ let ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.'; let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':''; html+='<div class="row'+meClass+'"><span>'+ic+' '+displayName+'</span><span style=color:#0f8;font-weight:900>'+r.time.toFixed(2)+'s</span></div>'; });
- outList.forEach(n=>{ let isMe=n===myName; let displayName=isMe? n+' (你)' : n; html+='<div class="row" style="opacity:.4"><span>💀 '+displayName+' (出局)</span></div>'; });
- $('mainLB').innerHTML=html; if(isHost) broadcast({type:'boardData',level:level,results:levelResults,outList:outList,alive:aliveList,outOrder:outOrder});
+ sorted.forEach((r,i)=>{
+   let s=playerStats[r.name]||{gold:0,silver:0,bronze:0};
+   let medals=formatMedals(s);
+   let ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+   let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':'';
+   html+='<div class="row'+meClass+'"><div><span>'+ic+' '+displayName+'</span><span class="medalCount">'+medals+'</span></div><div style="text-align:right"><div style="color:#0f8;font-weight:900">'+r.time.toFixed(2)+'s</div><div style="font-size:10px;color:#FFD700">'+'🥇'+s.gold+' 🥈'+s.silver+' 🥉'+s.bronze+'</div></div></div>';
+ });
+ outList.forEach(n=>{ let s=playerStats[n]||{gold:0,silver:0,bronze:0}; let medals=formatMedals(s); let isMe=n===myName; let displayName=isMe? n+' (你)' : n; html+='<div class="row" style="opacity:.4"><span>💀 '+displayName+'</span><span class="medalCount">'+medals+' 🥇'+s.gold+' 🥈'+s.silver+' 🥉'+s.bronze+'</span></div>'; });
+ $('mainLB').innerHTML=html;
+ if(isHost) broadcast({type:'boardData',level:level,results:levelResults,outList:outList,alive:aliveList,outOrder:outOrder,stats:playerStats});
+ updateList();
 }
 async function handleData(data,conn){
  if(!data) return;
  if(data.type==='mode'){ setMode(data.mode); }
- if(data.type==='countdown'){ aliveList=data.alive||aliveList; $('alive').textContent=aliveList.length; playing=true; myOut=outList.includes(myName); await doCountdown(); }
+ if(data.type==='countdown'){ aliveList=data.alive||aliveList; if(data.stats) playerStats=data.stats; $('alive').textContent=aliveList.length; playing=true; myOut=outList.includes(myName); await doCountdown(); }
  if(data.type==='seq'){ seq=data.seq; level=data.level; aliveList=data.alive||aliveList; $('level').textContent=level; $('alive').textContent=aliveList.length; playing=true; await showSeq(); }
- if(data.type==='join' && isHost){ if(conn) conn.playerName=data.name; aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]); updateList(); }
+ if(data.type==='join' && isHost){ if(conn) conn.playerName=data.name; aliveList=connList.map(c=>c.playerName||'玩家').concat([myName]); initStats([data.name]); updateList(); broadcast({type:'stats',stats:playerStats}); }
+ if(data.type==='stats'){ playerStats=data.stats; updateList(); renderBoard(); }
  if(data.type==='result'){
    if(gameEnded) return;
-   if(data.isOut){ if(!outList.includes(data.name)){ outList.push(data.name); outOrder.push({name:data.name,level:level}); } aliveList=aliveList.filter(n=>n!==data.name); $('alive').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; renderBoard(); if(isHost){ if(aliveList.length===1){ endGameWithWinner(aliveList[0]); } else { broadcast({type:'out',name:data.name,alive:aliveList,outOrder:outOrder}); checkAllDone(); } } }
-   else { levelResults.push({name:data.name,time:data.time}); $('progress').textContent='✅ '+levelResults.length+'/'+aliveList.length+' 完成'; renderBoard(); if(isHost) checkAllDone(); }
+   if(data.isOut){ if(!outList.includes(data.name)){ outList.push(data.name); outOrder.push({name:data.name,level:level}); } aliveList=aliveList.filter(n=>n!==data.name); $('alive').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！剩'+aliveList.length+'人'; renderBoard(); if(isHost){ if(aliveList.length===1){ endGameWithWinner(aliveList[0]); } else { broadcast({type:'out',name:data.name,alive:aliveList,outOrder:outOrder,stats:playerStats}); checkAllDone(); } } }
+   else { levelResults.push({name:data.name,time:data.time}); $('progress').textContent='✅ '+levelResults.length+'/'+aliveList.length+' 完成'; if(isHost && levelResults.length>=aliveList.length){ addMedalsForLevel(); } renderBoard(); if(isHost) checkAllDone(); }
  }
- if(data.type==='out'){ if(!outList.includes(data.name)) outList.push(data.name); outOrder=data.outOrder||outOrder; aliveList=data.alive; $('alive').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！'; updateList(); renderBoard(); if(myName===data.name){ myOut=true; $('flash').textContent='💀 你已出局 - 觀戰中'; } }
- if(data.type==='final'){ gameEnded=true; playing=false; $('flash').innerHTML='🏆 '+data.winner+' 勝出！'; let html='<div style=text-align:center;font-weight:900;margin:8px 0>🏆 最終排名 - 第'+data.level+'關結束</div>'; data.finalRank.forEach(r=>{ let isMe=r.name===myName; let displayName=isMe? r.name+' (你)' : r.name; let meClass=isMe?' me':''; let winClass=r.rank===1?' win':''; let icon=r.rank===1?'👑':r.rank===2?'🥈':r.rank===3?'🥉':r.rank+'.'; let extra=r.rank===1?' - 勝者':' - 第'+(r.level||data.level)+'關出局'; html+='<div class="row'+meClass+winClass+'"><span>'+icon+' '+displayName+'</span><span style=color:'+(r.rank===1?'#FFEB00':'#aaa')+';font-weight:900>'+extra+'</span></div>'; }); $('mainLB').innerHTML=html; }
- if(data.type==='boardData'){ levelResults=data.results||[]; outList=data.outList||[]; aliveList=data.alive||aliveList; outOrder=data.outOrder||outOrder; renderBoard(); }
-}
-function checkAllDone(){ if(gameEnded) return; if(levelResults.length>=aliveList.length){ if(aliveList.length===1){ endGameWithWinner(aliveList[0]); return; } let sec=3; $('flash').textContent='剩'+aliveList.length+'人！'+sec+'秒後第'+(level+1)+'關...'; beep(800,0.2); let t=setInterval(()=>{ sec--; if(sec>0){ $('flash').textContent='剩'+aliveList.length+'人！'+sec+'秒後第'+(level+1)+'關...'; beep(800,0.2); } else clearInterval(t); },1000); setTimeout(async()=>{ if(!gameEnded){ broadcast({type:'countdown',alive:aliveList}); await doCountdown(); await nextLevel(); } },3000); } }
-function sendResult(t,ok,isOut){ let p={type:'result',name:myName,time:t,ok:ok,isOut:isOut}; if(isHost) handleData(p,null); else if(myConn&&myConn.open) myConn.send(p); }
-function copyLink(){ let l=$('roomLink').textContent; if(!l){ alert('未有Link'); return; } navigator.clipboard.writeText(l).then(()=>alert('已複製')); }
-if(localStorage.getItem('lampName')) $('nameInput').value=localStorage.getItem('lampName');
-setMode(3);
-function checkUrl(){ let p=new URLSearchParams(location.search).get('room'); if(p){ setTab('room'); $('nameInput').value=localStorage.getItem('lampName')||''; } } checkUrl();
-</script>
-</body></html>
+ if(data.type==='out'){ if(!outList.includes(data.name)) outList.push(data.name); outOrder=data.outOrder||outOrder; if(data.stats) playerStats=data.stats; aliveList=data.alive; $('alive').textContent=aliveList.length; $('progress').textContent='💀 '+data.name+' 出局！'; updateList(); renderBoard(); if(myName===data.name){ myOut=true; $('flash').textContent='💀 你已出局 - 觀戰中'; } }
+ if(data.type==='final'){ gameEnded=true; playing=false; let ranking=data.ranking||[data.winner]; playerStats=data.stats||playerStats; let king=ranking[0]||data.winner; $('flash').innerHTML='👑 記憶王 - '+king+'！'; $('time').textContent='獎牌榜排名'; let html='<div style=text-align:center;font-weight:900;margin:8px 0>👑 記憶王 - 最終獎牌榜 第'+data.level+'關結束</div>'; ranking.forEach((name,idx)=>{ let s=playerStats[name]||{gold:0,silver:0,bronze:0,totalTime:0}; let isMe=name===myName; let displayName=isMe? name+' (你)' : name; let isKing=idx===0; let rowClass=isKing?' row king':' row'+(isMe?' me':''); let icon=isKing?'👑':idx===1?'🥈':idx===2?'🥉':(idx+1)+'.'; let medals=formatMedals(s); html+='<div class="'+rowClass+'"><div><span>'+icon+' '+displayName+'</span><span class="medalCount">'+medals+'</span></div><div style="text-align:right"><div style="color:'+(isKing?'#FFD700':'#aaa')+';font-weight:900;font-size:11px">'+'🥇'+s.gold+' 🥈'+s.silver+' 🥉'+s.bronze+'</div><div style="font-size:11px;color:#0f8">'+(s.totalTime>0?s.totalTime.toFixed(2)+'s':'')+'</div></div></div>'; }); $('mainLB').innerHTML=html; }
+ if(data.type==='boardData'){ levelResult
