@@ -1,48 +1,159 @@
 <!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>方包包 V15.1 超簡單</title>
+<title>方包包 V16.0 記憶王最終版</title>
 <style>
 body{margin:0;background:#000;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;font-family:sans-serif;padding-bottom:30px}
 .ver{background:#FFEB00;color:#000;padding:4px 12px;border-radius:99px;font-weight:900;font-size:12px;position:fixed;top:8px;right:8px;z-index:20}
-.light{width:92%;max-width:420px;height:86px;border-radius:20px;border:0;margin:7px 0;font-size:22px;font-weight:900;color:#fff}
-#l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835}
+h1{margin:50px 0 8px;color:#FFEB00;font-size:26px}
+.tabs,.lvls{display:flex;gap:6px;width:92%;max-width:420px;margin:6px 0}
+.tab,.lvl{flex:1;padding:12px;border-radius:12px;border:2px solid #333;background:#111;color:#888;font-weight:900;font-size:13px;text-align:center}
+.tab.active{border-color:#FFEB00;color:#FFEB00;background:#FFEB0022}.lvl.active{border-color:#00FF88;color:#00FF88;background:#00FF8822}
+.flash{color:#FFEB00;font-weight:900;font-size:18px;margin:12px 0;min-height:28px;text-align:center}
+#cd{font-size:90px;font-weight:900;color:#FFEB00;display:none;text-align:center;margin:10px}
+.light{width:92%;max-width:420px;height:84px;border-radius:20px;border:0;margin:6px 0;font-size:22px;font-weight:900;color:#fff}
+#l0{background:#D00000} #l1{background:#E6A700;color:#000} #l2{background:#00A835} #l3{background:#0055D0} #l4{background:#8A00C2}
+.light.on{box-shadow:0 0 30px #fff;filter:brightness(1.6)}
 .btn{width:92%;max-width:420px;padding:16px;border-radius:99px;border:0;font-weight:900;font-size:17px;margin:6px 0}
 .btnY{background:#FFEB00;color:#000}.btnG{background:#333;color:#fff}
 .box{width:92%;max-width:420px;background:#121212;border:1px solid #444;border-radius:16px;padding:14px;margin-top:12px}
 .nameI{width:100%;padding:12px;border-radius:10px;border:2px solid #555;background:#000;color:#fff;font-size:15px;font-weight:700}
 .code{font-size:36px;font-weight:900;letter-spacing:8px;color:#00FF88;text-align:center;margin:8px 0}
-#joinLog{font-size:13px;text-align:center;margin-top:8px;padding:12px;border-radius:8px;background:#222;color:#FFEB00;white-space:pre-line;border:1px solid #FFEB00}
+.row{display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;padding:11px 12px;border-radius:12px;border:1px solid #222;margin-top:8px;font-size:13px}
+.row.me{border-color:#FFEB00;background:#2a2a00}.row.king{border-color:#FFD700;background:linear-gradient(90deg,#FFD70033,#FFEB0033)}
+#joinLog{font-size:12px;text-align:center;margin-top:8px;padding:10px;border-radius:8px;background:#222;color:#FFEB00;white-space:pre-line;line-height:1.6;border:1px solid #444}
 </style>
 </head><body>
-<div class="ver">V15.1 超簡單一撳出碼</div>
-<h1 style="margin:50px 0 8px;color:#FFEB00;font-size:26px">燈號對決</h1>
-<div class="light" id="l0" style="background:#D00000">🔴 紅 - 撳我試下有冇反應</div>
-<div id="flash" style="color:#FFEB00;font-weight:900;margin:12px">V15.1 測試掣得唔得</div>
-
-<button class="btn btnY" onclick="alert('紅黃綠掣OK！');document.getElementById('flash').textContent='✅ 按鈕有反應！'">測試按鈕</button>
-
-<div class="box">
-<div style="font-weight:900">💀 淘汰賽房間 - 記憶王獎牌制</div>
-<input id="nameInput" class="nameI" style="margin-top:10px" placeholder="Louis" value="Louis">
-<div style="display:flex;gap:6px;margin-top:10px"><button class="btn btnY" style="flex:1" onclick="createRoom()">開新房間</button><button class="btn btnG" style="flex:1" onclick="alert('加入房間掣OK')">加入房間</button></div>
-<div id="joinLog">準備就緒 - 按開新房間會即時出TEST碼</div>
-<div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div id="roomLink" style="color:#00FF88;font-size:11px;word-break:break-all;text-align:center"></div></div>
+<div class="ver">V16.0 記憶王最終版</div>
+<h1>燈號對決</h1>
+<div class="tabs">
+<div class="tab" id="tab-single" onclick="setTab('single')">單人</div>
+<div class="tab" id="tab-party" onclick="setTab('party')">本地多人</div>
+<div class="tab active" id="tab-room" onclick="setTab('room')">淘汰賽房間</div>
 </div>
-
+<div class="lvls">
+<div class="lvl active" id="lvl-3" onclick="setMode(3)">3盞</div>
+<div class="lvl" id="lvl-4" onclick="setMode(4)">4盞</div>
+<div class="lvl" id="lvl-5" onclick="setMode(5)">5盞</div>
+</div>
+<div style="display:flex;gap:6px;margin:8px 0"><div style="background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:99px;font-size:12px">關卡 <b id="level" style="color:#FFEB00">0</b></div><div style="background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:99px;font-size:12px">生存 <b id="alive" style="color:#FFEB00">1</b></div></div>
+<div class="flash" id="flash">V16.0 - 記憶王獎牌制 準備就緒</div>
+<div id="cd">3</div>
+<div id="time" style="color:#888;font-size:12px;min-height:16px"></div>
+<button class="light" id="l0" onclick="press(0)">🔴 紅</button>
+<button class="light" id="l1" onclick="press(1)">🟡 黃</button>
+<button class="light" id="l2" onclick="press(2)">🟢 綠</button>
+<button class="light" id="l3" onclick="press(3)" style="display:none">🔵 藍</button>
+<button class="light" id="l4" onclick="press(4)" style="display:none">🟣 紫</button>
+<div id="mainLB" style="width:92%;max-width:420px;margin-top:10px"></div>
+<button class="btn btnY" onclick="startGame()">▶️ 開始</button>
+<button class="btn btnG" onclick="resetGame()">↻ 重置</button>
+<div class="box" id="roomBox">
+<div style="font-weight:900">💀 淘汰賽房間 - 記憶王獎牌制 🥇🥈🥉</div>
+<input id="nameInput" class="nameI" style="margin-top:10px" placeholder="你的名稱 必填" maxlength="10" value="Louis">
+<div style="display:flex;gap:6px;margin-top:10px"><button class="btn btnY" style="flex:1" onclick="createRoom()">開新房間</button><button class="btn btnG" style="flex:1" onclick="joinPrompt()">加入房間</button></div>
+<div id="joinLog">V16.0 準備就緒 - 按開新房間會即時出碼，有獎牌制</div>
+<div id="roomInfo" style="display:none"><div class="code" id="roomCode">----</div><div id="roomLink" style="color:#00FF88;font-size:11px;word-break:break-all;text-align:center"></div><button class="btn btnG" style="padding:10px;margin-top:8px" onclick="copyLink()">📋 複製Link</button></div>
+<div id="roomPlayers" style="margin-top:8px"></div>
+<div id="progress" style="text-align:center;margin-top:6px;font-size:12px;color:#aaa"></div>
+</div>
 <script>
+var mode=3, seq=[], player=[], level=0, playing=false, showing=false, startTime=0, playMode='room';
+var myName='', myOut=false, aliveList=['玩家'], outList=[], outOrder=[], levelResults=[], gameEnded=false;
+var peer=null, connList=[], myConn=null, isHost=false, currentRoomCode='';
+var playerStats={};
+var freqs=[440,660,880,550,770];
+function $(id){ return document.getElementById(id); }
+var audioCtx=null;
+function getAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+function beep(f,d){ try{ var ctx=getAudio(); var o=ctx.createOscillator(); var g=ctx.createGain(); o.frequency.value=f; g.gain.value=0.5; o.connect(g); g.connect(ctx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+d); o.stop(ctx.currentTime+d);}catch(e){} }
+function setTab(m){ playMode=m; var tabs=document.querySelectorAll('.tab'); for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active'); document.getElementById('tab-'+m).classList.add('active'); }
+function setMode(m){ mode=m; var lvls=document.querySelectorAll('.lvl'); for(var i=0;i<lvls.length;i++) lvls[i].classList.remove('active'); document.getElementById('lvl-'+m).classList.add('active'); for(var j=0;j<5;j++){ var e=document.getElementById('l'+j); if(e) e.style.display=j<m?'block':'none'; } if(isHost) broadcast({type:'mode',mode:m}); }
+function lightOn(i){ var e=document.getElementById('l'+i); if(!e) return; e.classList.add('on'); beep(freqs[i],0.3); setTimeout(function(){ e.classList.remove('on'); },350); }
+async function doCountdown(){ document.getElementById('flash').style.display='none'; var cd=document.getElementById('cd'); cd.style.display='block'; for(var c=3;c>=1;c--){ cd.textContent=c; beep(900,0.2); await new Promise(r=>setTimeout(r,700)); } cd.textContent='GO!'; beep(1500,0.5); await new Promise(r=>setTimeout(r,500)); cd.style.display='none'; document.getElementById('flash').style.display='block'; }
+async function showSeq(){ showing=true; document.getElementById('flash').textContent='第'+level+'關 睇 '+seq.length+' 盞'; for(var i=0;i<seq.length;i++){ await new Promise(r=>setTimeout(r,500)); lightOn(seq[i]); await new Promise(r=>setTimeout(r,700)); } showing=false; document.getElementById('flash').textContent='第'+level+'關 按 '+seq.length+' 盞'; startTime=performance.now(); document.getElementById('time').textContent='⏱️ 計時中...'; player=[]; }
+async function nextLevel(){ if(gameEnded) return; level++; document.getElementById('level').textContent=level; seq.push(Math.floor(Math.random()*mode)); levelResults=[]; if(isHost) broadcast({type:'seq',seq:seq,level:level,alive:aliveList}); await showSeq(); }
+function initStats(names){ for(var i=0;i<names.length;i++){ if(!playerStats[names[i]]) playerStats[names[i]]={gold:0,silver:0,bronze:0,totalTime:0,levels:0}; } }
+function formatMedals(s){ if(!s) return ''; var a=[]; if(s.gold>0) a.push('🥇x'+s.gold); if(s.silver>0) a.push('🥈x'+s.silver); if(s.bronze>0) a.push('🥉x'+s.bronze); return a.join(' '); }
+function getSortedRanking(){ var names=Object.keys(playerStats); for(var i=0;i<aliveList.length;i++) if(names.indexOf(aliveList[i])===-1) names.push(aliveList[i]); for(var j=0;j<outList.length;j++) if(names.indexOf(outList[j])===-1) names.push(outList[j]); var uniq=[]; for(var k=0;k<names.length;k++) if(uniq.indexOf(names[k])===-1) uniq.push(names[k]); for(var l=0;l<uniq.length;l++) if(!playerStats[uniq[l]]) playerStats[uniq[l]]={gold:0,silver:0,bronze:0,totalTime:9999,levels:0}; uniq.sort(function(a,b){ var sa=playerStats[a], sb=playerStats[b]; if(sb.gold!==sa.gold) return sb.gold-sa.gold; if(sb.silver!==sa.silver) return sb.silver-sa.silver; if(sb.bronze!==sa.bronze) return sb.bronze-sa.bronze; return sa.totalTime-sb.totalTime; }); return uniq; }
+function addMedalsForLevel(){ var sorted=levelResults.slice().sort(function(a,b){ return a.time-b.time; }); for(var i=0;i<sorted.length;i++){ var r=sorted[i]; if(!playerStats[r.name]) playerStats[r.name]={gold:0,silver:0,bronze:0,totalTime:0,levels:0}; playerStats[r.name].totalTime+=r.time; playerStats[r.name].levels++; if(i===0) playerStats[r.name].gold++; else if(i===1) playerStats[r.name].silver++; else if(i===2) playerStats[r.name].bronze++; } if(isHost) broadcast({type:'stats',stats:playerStats}); }
+async function startGame(){ try{ getAudio(); }catch(e){} beep(600,0.1); if(playMode==='room'){ myName=document.getElementById('nameInput').value.trim()||'Louis'; if(!myName){ alert('請輸入名稱'); return; } localStorage.setItem('lampName',myName); if(!isHost &&!peer){ alert('請先開房'); return; } if(isHost && connList.length===0){ if(!confirm('未有人加入，只玩單人測試獎牌？')) return; aliveList=[myName]; } else if(isHost){ aliveList=[]; for(var i=0;i<connList.length;i++) aliveList.push(connList[i].playerName||'玩家'); aliveList.push(myName); } } else { aliveList=['玩家']; myName='玩家'; } seq=[]; level=0; outList=[]; outOrder=[]; myOut=false; gameEnded=false; playerStats={}; initStats(aliveList); document.getElementById('alive').textContent=aliveList.length; playing=true; if(isHost) broadcast({type:'countdown',alive:aliveList,stats:playerStats}); await doCountdown(); await nextLevel(); }
+function press(i){ lightOn(i); if(!playing||showing||gameEnded||myOut) return; player.push(i); var idx=player.length-1; if(player[idx]!==seq[idx]){ myOut=true; document.getElementById('flash').textContent='💀 按錯！出局！觀戰中'; beep(120,0.8); document.getElementById('time').textContent='💀 你已出局'; if(playMode==='room') sendResult(999,false,true); else { playing=false; } return; } if(player.length===seq.length){ var t=parseFloat(((performance.now()-startTime)/1000).toFixed(2)); if(playMode==='room'){ document.getElementById('flash').textContent='✅ 完成 '+t+'s 等其他人'; sendResult(t,true,false); document.getElementById('time').textContent='✅ 等待其他人...'; } else { document.getElementById('flash').textContent='✅ 第'+level+'關 '+t+'s 3秒後下一關'; setTimeout(function(){ nextLevel(); },1200); } } }
+function resetGame(){ playing=false; showing=false; gameEnded=false; myOut=false; seq=[]; player=[]; level=0; document.getElementById('level').textContent=0; document.getElementById('flash').textContent='V16.0 記憶王準備就緒'; document.getElementById('cd').style.display='none'; document.getElementById('time').textContent=''; document.getElementById('mainLB').innerHTML=''; document.getElementById('progress').textContent=''; }
+function endGameWithWinner(){ var ranking=getSortedRanking(); var king=ranking[0]; document.getElementById('flash').innerHTML='👑 記憶王 - '+king+'！'; document.getElementById('time').textContent='最終獎牌榜'; var html='<div style=text-align:center;font-weight:900;margin:8px 0>👑 記憶王 - 最終獎牌榜 第'+level+'關結束</div>'; for(var i=0;i<ranking.length;i++){ var name=ranking[i]; var s=playerStats[name]||{gold:0,silver:0,bronze:0,totalTime:0}; var isMe=name===myName; var displayName=isMe? name+' (你)' : name; var isKing=i===0; var rowClass=isKing?' row king':' row'+(isMe?' me':''); var icon=isKing?'👑':i===1?'🥈':i===2?'🥉':(i+1)+'.'; var medals=formatMedals(s); html+='<div class="'+rowClass+'"><div><span>'+icon+' '+displayName+'</span><span style="color:#FFD700;margin-left:6px">'+medals+'</span></div><div style="text-align:right"><div style="color:'+(isKing?'#FFD700':'#aaa')+';font-weight:900;font-size:11px">'+'🥇'+s.gold+' 🥈'+s.silver+' 🥉'+s.bronze+'</div><div style="font-size:11px;color:#0f8">'+(s.totalTime<9999?s.totalTime.toFixed(2)+'s':'')+'</div></div></div>'; } document.getElementById('mainLB').innerHTML=html; if(isHost) broadcast({type:'final',ranking:ranking,stats:playerStats,level:level}); }
+function updateList(){ var html=''; var ranking=getSortedRanking(); for(var i=0;i<ranking.length;i++){ var name=ranking[i]; var s=playerStats[name]; var medals=s? formatMedals(s):''; var isMe=name===myName; var dName=isMe? name+' (你)' : name; var meClass=isMe?' me':''; html+='<div class="row'+meClass+'"><span>👤 '+dName+'</span><span style="color:#FFD700">'+medals+'</span></div>'; } if(outList.length) html+='<div class="row" style="opacity:.4">💀 出局: '+outList.join(', ')+'</div>'; document.getElementById('roomPlayers').innerHTML=html; document.getElementById('alive').textContent=aliveList.length; }
+function broadcast(o){ for(var i=0;i<connList.length;i++){ try{ if(connList[i].open) connList[i].send(o);}catch(e){} } }
 function createRoom(){
   try{
-    alert('收到開房！');
-    var nameVal=document.getElementById('nameInput').value||'Louis';
-    var code='TEST';
+    var nameVal=document.getElementById('nameInput').value.trim()||'Louis';
+    myName=nameVal; localStorage.setItem('lampName',myName);
+    var code=Math.random().toString(36).substring(2,6).toUpperCase();
+    currentRoomCode=code;
     document.getElementById('roomCode').textContent=code;
     document.getElementById('roomInfo').style.display='block';
-    document.getElementById('joinLog').textContent='✅ 成功出碼！\n房號：'+code+'\n房主：'+nameVal+'\n\n如果見到呢個，證明開房掣100%得，之前係PeerJS搞死咗';
-    document.getElementById('flash').textContent='✅ 開房掣正常！';
-  }catch(e){
-    alert('開房錯誤：'+e.message);
-    document.getElementById('joinLog').textContent='❌ 錯誤：'+e.message;
-  }
+    var link=location.origin+location.pathname+'?room='+code;
+    document.getElementById('roomLink').textContent=link;
+    history.replaceState(null,'','?room='+code);
+    document.getElementById('joinLog').textContent='✅ 已出碼 '+code+'！\n房主：'+myName+'\n正在背景連接Peer伺服器...\n如果10秒後顯示連接成功，朋友就可加入\n就算連唔到，你照可玩單人獎牌制';
+    aliveList=[myName]; playerStats={}; initStats(aliveList); updateList();
+    isHost=true; connList=[]; outList=[]; outOrder=[]; gameEnded=false;
+    // 背景載入PeerJS，唔阻塞按鈕
+    if(typeof Peer==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/peerjs@1.5.3/dist/peerjs.min.js';
+      s.onload=function(){ actuallyCreatePeer(code); };
+      s.onerror=function(){ document.getElementById('joinLog').textContent='⚠️ 房號 '+code+' 已出，但PeerJS載入失敗\n原因：網絡擋住jsdelivr\n解決：轉手機4G/5G重試\n但你照可玩單人獎牌制 🥇🥈🥉'; };
+      document.head.appendChild(s);
+    }else{ actuallyCreatePeer(code); }
+  }catch(e){ alert('開房錯誤：'+e.message); }
 }
-document.getElementById('l0').onclick=function(){ alert('紅掣得！'); document.getElementById('flash').textContent='✅ 紅掣有反應'; };
-</script>
-</body></html>
+function actuallyCreatePeer(code){
+  var peerId='louis-room-'+code+'-'+Date.now().toString().slice(-4);
+  if(peer){ try{peer.destroy();}catch(e){} }
+  peer=new Peer(peerId);
+  peer.on('open',function(id){ document.getElementById('joinLog').textContent='✅ 房間 '+code+' 已開好！Peer連接成功！\n房主：'+myName+'\nPeerID:'+id+'\n唔好關頁，叫朋友用Link入\n已有記憶王獎牌制 🥇🥈🥉'; });
+  peer.on('connection',function(c){ connList.push(c); c.on('open',function(){ document.getElementById('joinLog').textContent='✅ 有人加入！共 '+(connList.length+1)+' 人 - '+code; updateList(); c.send({type:'mode',mode:mode}); c.send({type:'stats',stats:playerStats}); }); c.on('data',function(d){ handleData(d,c); }); c.on('close',function(){ connList=connList.filter(function(x){ return x!==c; }); updateList(); }); });
+  peer.on('error',function(e){ document.getElementById('joinLog').textContent='⚠️ Peer錯誤：'+e.type+'\n房號 '+code+' 仲有效，但可能要用4G\n'+e.message; });
+}
+function joinPrompt(){ myName=document.getElementById('nameInput').value.trim()||'Louis'; localStorage.setItem('lampName',myName); var c=prompt('輸入4位房間碼:'); if(!c) return; joinRoom(c.toUpperCase().trim()); }
+function joinRoom(code){
+  function doJoin(){
+    if(typeof Peer==='undefined'){ alert('PeerJS未載入，轉4G'); return; }
+    if(peer){ try{peer.destroy();}catch(e){} }
+    peer=new Peer();
+    document.getElementById('joinLog').textContent='🔍 搵緊房主 '+code+'...';
+    peer.on('open',function(){
+      var possibleIds=[]; for(var i=0;i<10;i++) possibleIds.push('louis-room-'+code+'-'+i);
+      var found=false; var tried=0;
+      function tryOne(){
+        if(tried>=possibleIds.length){ if(!found) document.getElementById('joinLog').textContent='❌ 搵唔到房間 '+code+'\n房主可能關咗頁或唔同版本'; return; }
+        var targetId=possibleIds[tried]; tried++;
+        document.getElementById('joinLog').textContent='🔍 嘗試 '+tried+'/'+possibleIds.length+': '+targetId;
+        var conn=peer.connect(targetId,{reliable:true});
+        var timer=setTimeout(function(){ try{conn.close();}catch(e){} tryOne(); },1500);
+        conn.on('open',function(){ clearTimeout(timer); if(found) return; found=true; myConn=conn; document.getElementById('roomCode').textContent=code; document.getElementById('roomInfo').style.display='block'; document.getElementById('joinLog').textContent='✅ 已連接 '+code+'\n等房主開始'; conn.send({type:'join',name:myName}); });
+        conn.on('data',function(d){ handleData(d); });
+        conn.on('error',function(){ clearTimeout(timer); tryOne(); });
+      }
+      tryOne();
+    });
+  }
+  if(typeof Peer==='undefined'){
+    var s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/peerjs@1.5.3/dist/peerjs.min.js'; s.onload=doJoin; s.onerror=function(){ document.getElementById('joinLog').textContent='❌ PeerJS載入失敗，轉4G'; }; document.head.appendChild(s);
+  }else doJoin();
+}
+function renderBoard(){
+  if(gameEnded) return;
+  var title='<div style=text-align:center;font-weight:900;margin:6px 0>🏆 第'+level+'關 生存'+aliveList.length+'人 - 獎牌榜</div>';
+  var sorted=levelResults.slice().sort(function(a,b){ return a.time-b.time; });
+  var html=title;
+  for(var i=0;i<sorted.length;i++){ var r=sorted[i]; var s=playerStats[r.name]||{gold:0,silver:0,bronze:0}; var medals=formatMedals(s); var ic=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.'; var isMe=r.name===myName; var displayName=isMe? r.name+' (你)' : r.name; var meClass=isMe?' me':''; html+='<div class="row'+meClass+'"><div><span>'+ic+' '+displayName+'</span><span style="color:#FFD700;margin-left:6px">'+medals+'</span></div><div style="text-align:right"><div style="color:#0f8;font-weight:900">'+r.time.toFixed(2)+'s</div><div style="font-size:10px;color:#FFD700">'+'🥇'+s.gold+' 🥈'+s.silver+' 🥉'+s.bronze+'</div></div></div>'; }
+  for(var j=0;j<outList.length;j++){ var n=outList[j]; var s2=playerStats[n]||{gold:0,silver:0,bronze:0}; var medals2=formatMedals(s2); var isMe2=n===myName; var displayName2=isMe2? n+' (你)' : n; html+='<div class="row" style="opacity:.4"><span>💀 '+displayName2+'</span><span style="color:#FFD700">'+medals2+'</span></div>'; }
+  document.getElementById('mainLB').innerHTML=html; if(isHost) broadcast({type:'boardData',level:level,results:levelResults,outList:outList,alive:aliveList,outOrder:outOrder,stats:playerStats}); updateList();
+}
+async function handleData(data,conn){
+  if(!data) return;
+  if(data.type==='mode'){ setMode(data.mode); }
+  if(data.type==='countdown'){ aliveList=data.alive||aliveList; if(data.stats) playerStats=data.stats; document.getElementById('alive').textContent=aliveList.length; playing=true; myOut=outList.indexOf(myName)!==-1; await doCountdown(); }
+  if(data.type==='seq'){ seq=data.seq; level=data.level; aliveList=data.alive||aliveList; document.getElementById('level').textContent=level; document.getElementById('alive').textContent=aliveList.length; playing=true; await showSeq(); }
+  if(data.type==='join' && isHost){ if(conn) conn.playerName=data.name; aliveList=[]; for(var i=0;i<connList.length;i++) aliveList.push(connList[i].playerName||'玩家'); aliveList.push(myName); initStats([data.name]); updateList(); broadcast({type:'stats',stats:playerStats}); }
+  if(data.type==='stats'){ playerStats=data.stats; updateList(); renderBoard(); }
+  if(data.type==='result'){ if(gameEnded) return; if(data.isOut){ if(outList.indexOf(data.name)===-1){ outList.push(data.name); outOrder.push({name:data.name,level:
